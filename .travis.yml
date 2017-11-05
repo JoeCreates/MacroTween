@@ -7,6 +7,17 @@ os:
 haxe:
   - "3.4.4"
 
+install:
+  # Install dependencies (MacroTween currently depends on HaxeFlixel)
+  - haxelib install hxcpp
+  - haxelib install lime 2.9.1
+  - haxelib install openfl 3.6.1
+  - haxelib install flixel
+  
+  # Unit test runner dependencies
+  - haxelib install munit
+  - haxelib install hamcrest
+
 script:
   # Package the haxelib
   - chmod +x ./package_haxelib.sh
