@@ -13,6 +13,8 @@ install:
   - haxelib install lime 2.9.1
   - haxelib install openfl 3.6.1
   - haxelib install flixel
+  # We use Sure for sanity checking
+  - haxelib install Sure
   
   # Unit test runner dependencies
   - haxelib install munit
