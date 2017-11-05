@@ -9,7 +9,7 @@ haxe:
 
 install:
   # We use Sure for sanity checking
-  - haxelib install Sure
+  - haxelib install sure
   
   # Get the documentation generator
   - haxelib install dox

@@ -1,6 +1,6 @@
 -cp ../
 
--lib Sure
+-lib sure
 -lib utest
 
 -main TestAll
