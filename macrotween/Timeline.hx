@@ -1,4 +1,4 @@
-package lycan.timeline;
+package macrotween;
 
 import flixel.math.FlxMath;
 import flixel.util.FlxSignal;

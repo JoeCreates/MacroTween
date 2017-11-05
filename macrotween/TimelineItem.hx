@@ -1,7 +1,6 @@
-package lycan.timeline;
-import flixel.util.FlxSignal;
+package macrotween;
 
-using lycan.util.structure.container.BitSet;
+import flixel.util.FlxSignal;
 
 // TODO events (boundaries) should be queued up to happen in correct order when many are passed
 

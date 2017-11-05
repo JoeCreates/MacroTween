@@ -1,4 +1,5 @@
-package lycan.timeline;
+package macrotween;
+
 import haxe.macro.ExprTools;
 import haxe.macro.Printer;
 import haxe.macro.TypeTools;
