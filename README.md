@@ -31,7 +31,7 @@ Tween.tween(0, 1, [myFunc(10...20)]);
 ## How it works
 Unlike typical tweening libraries which use reflection, MacroTween generates a object with methods to return and set the value of a variable. For example:
 
-```
+```haxe
 // This macro call...
 Tween.tween(0, 1, [myObj.x => 100]);
 
