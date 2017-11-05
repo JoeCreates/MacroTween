@@ -1,0 +1,1 @@
+-cmd haxe tests.hxml -neko bin/neko.n

@@ -2,7 +2,7 @@
 <project version="2">
   <!-- Output SWF options -->
   <output>
-    <movie outputType="Application" />
+    <movie outputType="CustomBuild" />
     <movie input="" />
     <movie path="project.xml" />
     <movie fps="0" />
@@ -40,14 +40,14 @@
     <hidden path="obj" />
   </hiddenPaths>
   <!-- Executed before build -->
-  <preBuildCommand>haxe test.hxml</preBuildCommand>
+  <preBuildCommand>haxe build_neko.hxml</preBuildCommand>
   <!-- Executed after build -->
   <postBuildCommand alwaysRun="False" />
   <!-- Other project options -->
   <options>
     <option showHiddenPaths="False" />
     <option testMovie="Custom" />
-    <option testMovieCommand="bin\html5\bin\index.html" />
+    <option testMovieCommand="run_neko.bat" />
   </options>
   <!-- Plugin storage -->
   <storage />

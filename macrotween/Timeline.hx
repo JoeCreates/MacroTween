@@ -1,7 +1,6 @@
 package macrotween;
 
-import flixel.math.FlxMath;
-import flixel.util.FlxSignal;
+import macrotween.signal.FlxSignal;
 import macrotween.TimelineItem.Boundary;
 
 class Timeline extends TimelineItem {
@@ -28,7 +27,7 @@ class Timeline extends TimelineItem {
 	// Boundary crossing callbacks of items are called in chronological order
 	// The order that individual items are updated is undefined
 	override public function stepTo(nextTime:Float, ?unusedCurrentTime:Float):Void {
-		nextTime = FlxMath.bound(nextTime, 0, duration);
+		nextTime = bound(nextTime, 0, duration);
 
 		if (currentTime == nextTime) {
 			return;
@@ -141,7 +140,7 @@ class Timeline extends TimelineItem {
 	}
 
 	private function set_currentTime(time:Float):Float {
-		return this.currentTime = FlxMath.bound(time, 0, duration);
+		return this.currentTime = bound(time, 0, duration);
 	}
 
 	override private function get_duration():Float {
@@ -154,5 +153,10 @@ class Timeline extends TimelineItem {
 			dirtyDuration = false;
 		}
 		return this.duration;
+	}
+	
+	private static inline function bound(value:Float, ?min:Float, ?max:Float):Float {
+		var lowerBound:Float = (min != null && value < min) ? min : value;
+		return (max != null && lowerBound > max) ? max : lowerBound;
 	}
 }

@@ -1,26 +1,25 @@
-package;
+package tests;
 
-import haxe.PosInfos;
 import macrotween.Timeline;
 import macrotween.Tween;
-import massive.munit.Assert;
+import utest.Assert;
 
-class TimelineTest {
+class TestTimeline {
 	var tl:Timeline;
 	var a:{a:Float, b:Float};
 	var b:Float;
 	
-	function linear(x:Float) {return x;}
+	function linear(x:Float) { return x; }
 	
-	@Before
-	private function before():Void {
+	public function new() {}
+	
+	public function setup():Void {
 		tl = new Timeline();
 		a = {a:5.0, b:5.0};
 		b = 5;
 	}
 	
-	@Test
-	function testTimelineNotEntered():Void {
+	public function testTimelineNotEntered():Void {
 		tl.add(Tween.tween(1, 1, [a.a => _...10, a.b => 10..._], linear));
 		tl.items.first().removeOnCompletion = false;
 		tl.stepTo(0.5);
@@ -29,8 +28,7 @@ class TimelineTest {
 		Assert.isTrue(!tl.items.first().hovered);
 	}
 	
-	@Test
-	function testTimelineEntered():Void {
+	public function testTimelineEntered():Void {
 		tl.add(Tween.tween(1, 1, [a.a => _...10, a.b => 10..._], linear));
 		tl.items.first().removeOnCompletion = false;
 		tl.stepTo(1.1);
@@ -39,8 +37,7 @@ class TimelineTest {
 		Assert.isTrue(a.b == 9);
 	}
 	
-	@Test
-	function testReverseOutOfTimeline():Void {
+	public function testReverseOutOfTimeline():Void {
 		testTimelineEntered();
 		tl.stepTo(0.1);//TODO something going wrong, here
 		Assert.isTrue(a.a == 5);

@@ -1,6 +1,6 @@
 package macrotween;
 
-import flixel.util.FlxSignal;
+import macrotween.signal.FlxSignal;
 
 // TODO events (boundaries) should be queued up to happen in correct order when many are passed
 

@@ -1,0 +1,6 @@
+-cp ../
+
+-lib Sure
+-lib utest
+
+-main TestAll

@@ -8,28 +8,31 @@ haxe:
   - "3.4.4"
 
 install:
-  # Install dependencies (MacroTween currently depends on HaxeFlixel)
-  - haxelib install hxcpp
-  - haxelib install lime 2.9.1
-  - haxelib install openfl 3.6.1
-  - haxelib install flixel
   # We use Sure for sanity checking
   - haxelib install Sure
   
+  # Get the documentation generator
+  - haxelib install dox
+  
   # Unit test runner dependencies
-  - haxelib install munit
-  - haxelib install hamcrest
+  - haxelib install utest
 
 script:
   # Package the haxelib
   - chmod +x ./package_haxelib.sh
   - ./package_haxelib.sh
   
-  # TODO generate documentation
+  # Generate documentation
+  - pushd dox
+  - chmod +x ./generate_docs.sh
+  - ./generate_docs.sh
+  - popd
   
   # Build/run the unit tests
   - pushd unit
-  - haxe test.hxml
+  - haxe tests.hxml -neko bin/neko.n
+  - chmod +x ./bin/neko.n
+  - ./bin/neko.n
   - popd
 
 # Deploy the built haxelib to GitHub releases
