@@ -1,7 +1,7 @@
 # MacroTween
 MacroTween offers concise tweening with zero reflection, providing unrivalled performance and ease of use.
 
-```
+```haxe
 // Concise arrow syntax
 // Tween myObject.x to 100
 Tween.tween(0, 1, [myObject.x => 100]);
