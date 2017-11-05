@@ -32,7 +32,7 @@ script:
   - pushd unit
   - haxe tests.hxml -neko bin/neko.n
   - chmod +x ./bin/neko.n
-  - ./bin/neko.n
+  - neko bin/neko.n
   - popd
 
 # Deploy the built haxelib to GitHub releases
