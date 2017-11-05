@@ -1,0 +1,13 @@
+engines:
+  haxe-checkstyle:
+    enabled: true
+    checks:
+      MagicNumber:
+        enabled: false
+
+exclude_paths:
+  - dox/**/*
+
+ratings:
+  paths:
+    - "macrotween"
