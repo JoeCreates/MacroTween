@@ -1,6 +1,3 @@
-sudo: required
-dist: trusty
-
 language: haxe
 
 os:
@@ -8,12 +5,31 @@ os:
 
 # see haxe versions: http://haxe.org/website-content/downloads/versions.json
 haxe:
-  - "3.0.0"
-  - "3.2.1"
-  - "3.4.2"
   - "3.4.4"
 
-install:
-
 script:
-  - haxe MacroTween.hxml
+  # Package the haxelib
+  - chmod +x ./package_haxelib.sh
+  - ./package_haxelib.sh
+  # TODO generate documentation
+  
+  # TODO build/sanity check the code
+  #- haxe MacroTween.hxml
+
+# Deploy the built haxelib to GitHub releases
+deploy:
+  provider: releases
+  api_key: $GITHUB_API_KEY
+  file: MacroTween.zip
+  skip_cleanup: true
+  on:
+    tags: true
+
+# Deploy generated documentation to GitHub Pages
+deploy:
+  provider: pages
+  skip_cleanup: true
+  local_dir: $TRAVIS_BUILD_DIR/docs/
+  github_token: $GITHUB_API_KEY
+  on:
+    branch: master
