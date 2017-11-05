@@ -38,9 +38,9 @@ script:
 # Deploy the built haxelib to GitHub releases
 deploy:
   provider: releases
+  skip_cleanup: true
   api_key: $GITHUB_API_KEY
   file: MacroTween.zip
-  skip_cleanup: true
   on:
     tags: true
 
