@@ -1,4 +1,10 @@
 # MacroTween
+
+[![Haxelib Version](https://img.shields.io/github/tag/JoeCreates/MacroTween.svg?style=flat-square&label=haxelib)](http://lib.haxe.org/p/MacroTween)
+[![Travis Unit Test Build Status](https://img.shields.io/travis/JoeCreates/MacroTween.svg?style=flat-square)](https://travis-ci.org/JoeCreates/MacroTween)
+[![Code Climate](https://img.shields.io/codeclimate/issues/github/JoeCreates/MacroTween.svg?style=flat-square)](https://codeclimate.com/github/JoeCreates/MacroTween/issues)
+[![License](http://img.shields.io/:license-mit-blue.svg?style=flat-square)](https://github.com/JoeCreates/MacroTween/blob/master/LICENSE)
+
 MacroTween offers concise tweening without reflection, providing unrivalled performance and ease of use.
 
 ```haxe
