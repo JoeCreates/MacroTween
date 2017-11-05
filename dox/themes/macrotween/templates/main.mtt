@@ -14,7 +14,7 @@
 	<script src="::api.config.rootPath::bootstrap/js/bootstrap.min.js"></script>
 	<script src="::api.config.rootPath::bootstrap/js/bootstrap-select.min.js"></script>
 	<link href="::api.config.rootPath::styles.css" rel="stylesheet" />
-	<link href="::api.config.rootPath::samcodes-nav.css" rel="stylesheet" />
+	<link href="::api.config.rootPath::macrotween-nav.css" rel="stylesheet" />
 	<script type="text/javascript">var dox = {
 		rootPath: "::api.config.rootPath::",
 		platforms: [
@@ -36,8 +36,8 @@
 <body>
 <div class="navbar navbar-fixed-top ">
 	<div class="navbar-inner">
-		<a class="samcodes-logo" href="https://github.com/Tw1ddle/geometrize-haxe"><img alt="Geometrize Haxe" height="42" src="::api.config.rootPath::logo.png" width="307" /></a>
-		<a class="api-link" href="/geometrize-haxe/geometrize/index.html">API</a>
+		<a class="macrotween-logo" href="https://github.com/JoeCreates/MacroTween"><img alt="MacroTween logo" height="42" src="::api.config.rootPath::logo.png" width="307" /></a>
+		<a class="api-link" href="/macrotween/macrotween/index.html">API</a>
 	</div>
 </div>
 <div class="container main-content">
@@ -72,9 +72,7 @@
 		<div class="copyright">
 			<p ::cond api.isDefined("version")::>This documentation is generated for version ::api.getValue('version')::</p>
 			<p>
-			<a href="http://www.samcodes.co.uk/project/geometrize-haxe-web/" title="Geometrize Haxe Demo" class="hf-link">Geometrize Haxe Website</a> |&nbsp;
-			<a href="https://github.com/Tw1ddle/geometrize-haxe" title="Geometrize Haxe on Github">Contribute to Geometrize Haxe</a> |&nbsp;
-			<a href="https://twitter.com/Sam_Twidale" title="Contact Sam">Contact Sam</a>
+			<a href="https://github.com/JoeCreates/MacroTween" title="MacroTween on Github">Contribute to MacroTween</a>
 			</p>
 		</div>
 	</div>
