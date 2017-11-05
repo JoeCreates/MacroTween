@@ -2,7 +2,7 @@ package macrotween;
 
 import flixel.math.FlxMath;
 import flixel.util.FlxSignal;
-import lycan.timeline.TimelineItem.Boundary;
+import macrotween.TimelineItem.Boundary;
 
 class Timeline extends TimelineItem {
 	public var currentTime(default, set):Float; // Setting this will skip to the absolute time without triggering items
