@@ -10,7 +10,7 @@ MacroTween offers concise tweening without reflection, providing unrivalled perf
 ```haxe
 // Concise arrow syntax
 // Tween myObject.x to 100
-Tween.tween(0, 1, [myObject.x => 100], Ease.LINEAR);
+Tween.tween(0, 1, [myObject.x => 100], Ease.quadInOut);
 
 // Specify ranges
 Tween.tween(0, 1, [myObject.x => 10...20]);
@@ -23,7 +23,8 @@ Tween.tween(0, 1, [x => 100]);
 Tween.tween(0, 1, [object1.x => 100, object2.x => 200]);
 
 // Compound expressions
-Tween.tween(0, 1, [obj => [x => 100, y => 100]]
+Tween.tween(0, 1, [obj => [x => 100, y => 100]]);
+Tween.tween(0, 1, [[objA, objB] => [x => 100, y => 100]]);
 
 // Implicit start or end values
 // A reverse tween from t=1...0 would tween from whatever the initial value is to 10
@@ -52,7 +53,7 @@ Tween.tween(0, 1, [myObj.x => 100]);
       return myObj.x
     },
   tween:
-    function(startValue:Float, endValue:FLoat, tween:Tween, time:Float):Void {
+    function(startValue:Float, endValue:Float, tween:Tween, time:Float):Void {
       myObj.x = startValue + progress * (endValue - startValue);
     }
 }
