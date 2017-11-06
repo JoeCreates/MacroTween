@@ -10,6 +10,9 @@ haxe:
   - "3.4.2"
   - "3.4.3"
   - "3.4.4"
+  - "4.0.0-preview.1"
+  - "4.0.0-preview.2"
+  - development
 
 install:
   # We use Sure for sanity checking
