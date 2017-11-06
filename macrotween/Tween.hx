@@ -36,7 +36,9 @@ class Tween extends TimelineItem {
 	}
 
 	override public function onUpdate(time:Float):Void {
-		if (hovered) {
+		this.currentTime = time;
+		
+		if (isTimeInBounds(time)) {
 			for (tweener in tweeners) {
 				tweener.tween(tweener.startValue, tweener.endValue, this, time);
 			}

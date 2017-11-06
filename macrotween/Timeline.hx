@@ -4,8 +4,6 @@ import macrotween.signal.FlxSignal;
 import macrotween.TimelineItem.Boundary;
 
 class Timeline extends TimelineItem {
-	public var currentTime(default, set):Float; // Setting this will skip to the absolute time without triggering items
-	public var lastTime:Float;
 	public var onReset(default, null) = new FlxSignal();
 
 	public var items:List<TimelineItem>; // TODO an interval tree might be faster
@@ -15,7 +13,6 @@ class Timeline extends TimelineItem {
 		super(null, 0, 0);
 		items = new List<TimelineItem>();
 		dirtyDuration = true;
-		currentTime = 0;
 	}
 
 	// Step to a relative time on the timeline
@@ -137,10 +134,6 @@ class Timeline extends TimelineItem {
 				items.remove(item);
 			}
 		}
-	}
-
-	private function set_currentTime(time:Float):Float {
-		return this.currentTime = bound(time, 0, duration);
 	}
 
 	override private function get_duration():Float {
