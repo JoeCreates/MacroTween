@@ -42,8 +42,6 @@ class Timeline extends TimelineItem {
 		var intersections:Array<Boundary> = [];
 
 		var gatherIntersections = function(item:TimelineItem) {
-			Sure.sure(item.startTime <= item.endTime);
-
 			var shouldStep:Bool = rangesIntersect(currentTime, nextTime, item.startTime, item.endTime);
 
 			if (!shouldStep) {
@@ -90,8 +88,6 @@ class Timeline extends TimelineItem {
 	}
 
 	public function addCue(target:Dynamic, f:Bool->Int->Void, startTime:Float):Cue {
-		Sure.sure(target != null);
-
 		var cue = new Cue(startTime, f);
 		add(cue);
 		return cue;
@@ -105,7 +101,6 @@ class Timeline extends TimelineItem {
 	}
 
 	public function remove(item:TimelineItem):Void {
-		Sure.sure(item != null);
 		items.remove(item);
 	}
 
@@ -124,7 +119,6 @@ class Timeline extends TimelineItem {
 	}
 
 	public function itemTimeChanged(item:TimelineItem):Void {
-		Sure.sure(item != null);
 		dirtyDuration = true;
 	}
 

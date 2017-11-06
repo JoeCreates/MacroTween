@@ -46,8 +46,6 @@ class Tween extends TimelineItem {
 	}
 
 	public static function progressFraction(time:Float, start:Float, end:Float):Float {
-		Sure.sure(start <= end);
-
 		if (start == end) {
 			return 0.5;
 		}
