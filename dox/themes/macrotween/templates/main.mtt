@@ -37,7 +37,7 @@
 <div class="navbar navbar-fixed-top ">
 	<div class="navbar-inner">
 		<a class="macrotween-logo" href="https://github.com/JoeCreates/MacroTween"><img alt="MacroTween logo" height="42" src="::api.config.rootPath::logo.png" width="307" /></a>
-		<a class="api-link" href="/macrotween/index.html">API</a>
+		<a class="api-link" href="/MacroTween/macrotween/index.html">API</a>
 	</div>
 </div>
 <div class="container main-content">

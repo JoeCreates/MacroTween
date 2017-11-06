@@ -5,7 +5,14 @@ os:
 
 # see haxe versions: http://haxe.org/website-content/downloads/versions.json
 haxe:
+  - "3.4.0"
+  - "3.4.1"
+  - "3.4.2"
+  - "3.4.3"
   - "3.4.4"
+  - "4.0.0-preview.1"
+  - "4.0.0-preview.2"
+  - development
 
 install:
   # We use Sure for sanity checking
@@ -41,7 +48,9 @@ deploy:
   skip_cleanup: true
   api_key: $GITHUB_API_KEY
   file: MacroTween.zip
+  # Only deploy for tagged builds for one of the builds
   on:
+    condition: "$TRAVIS_HAXE_VERSION = 3.4.4"
     tags: true
 
 # Deploy generated documentation to GitHub Pages
@@ -50,5 +59,7 @@ deploy:
   skip_cleanup: true
   local_dir: $TRAVIS_BUILD_DIR/dox/generated_docs
   github_token: $GITHUB_API_KEY
+  # Only deploy for one of the Haxe builds
   on:
+    condition: "$TRAVIS_HAXE_VERSION = 3.4.4"
     branch: master
