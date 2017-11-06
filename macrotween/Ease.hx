@@ -50,9 +50,9 @@ package macrotween;
 class Ease {
 	
 	// Atan
-	public static inline var atanIn = atanInAdv.bind(_, 15);
-	public static inline var atanInOut = atanInAdv.bind(_, 15);
-	public static inline var atanOut = atanInAdv.bind(_, 15);
+	public static inline function atanIn(t:Float):Float return atanInAdv.bind(_, 15)(t);
+	public static inline function atanInOut(t:Float):Float return atanInAdv.bind(_, 15)(t);
+	public static inline function atanOut(t:Float):Float return atanInAdv.bind(_, 15)(t);
 
 	public static inline function atanInAdv(t:Float, a:Float = 15):Float {
 		var m:Float = Math.atan(a);
@@ -69,10 +69,10 @@ class Ease {
 	}
 	
 	// Back
-	public static inline var backIn = backInAdv.bind(_, 1.70158);
-	public static inline var backOut = backOutAdv.bind(_, 1.70158);
-	public static inline var backInOut = backInOutAdv.bind(_, 1.70158);
-	public static inline var backOutIn = backOutInAdv.bind(_, 1.70158);
+	public static inline function backIn(t:Float):Float return backInAdv.bind(_, 1.70158)(t);
+	public static inline function backOut(t:Float):Float return backOutAdv.bind(_, 1.70158)(t);
+	public static inline function backInOut(t:Float):Float return backInOutAdv.bind(_, 1.70158)(t);
+	public static inline function backOutIn(t:Float):Float return backOutInAdv.bind(_, 1.70158)(t);
 	
 	public static inline function backInAdv(t:Float, s:Float = 1.70158):Float {
 		return t * t * ((s + 1) * t - s);
@@ -90,28 +90,28 @@ class Ease {
 	}
 
 	public static inline function backOutInAdv(t:Float, s:Float = 1.70158):Float {
-		return (t < 0.5) ? backOut(2 * t, s) / 2 : backIn(2 * t - 1, s) / 2 + 0.5;
+		return (t < 0.5) ? backOutAdv(2 * t, s) / 2 : backInAdv(2 * t - 1, s) / 2 + 0.5;
 	}
 	
 	// Bounce
-	public static inline var bounceIn = bounceInAdv.bind(_, 1.70158);
-	public static inline var bounceOut = bounceOutAdv.bind(_, 1.70158);
-	public static inline var bounceInOut = bounceInOutAdv.bind(_, 1.70158);
-	public static inline var bounceOutIn = bounceOutInAdv.bind(_, 1.70158);
+	public static inline function bounceIn(t:Float):Float return bounceInAdv.bind(_, 1.70158)(t);
+	public static inline function bounceOut(t:Float):Float return bounceOutAdv.bind(_, 1.70158)(t);
+	public static inline function bounceInOut(t:Float):Float return bounceInOutAdv.bind(_, 1.70158)(t);
+	public static inline function bounceOutIn(t:Float):Float return bounceOutInAdv.bind(_, 1.70158)(t);
 
-	public static inline function bounceIn(t:Float, a:Float = 1.70158):Float {
+	public static inline function bounceInAdv(t:Float, a:Float = 1.70158):Float {
 		return 1 - bounceHelperOut(1 - t, 1, a);
 	}
 
-	public static inline function bounceOut(t:Float, a:Float = 1.70158):Float {
+	public static inline function bounceOutAdv(t:Float, a:Float = 1.70158):Float {
 		return bounceHelperOut(t, 1, a);
 	}
 
-	public static inline function bounceInOut(t:Float, a:Float = 1.70158):Float {
-		return (t < 0.5) ? bounceIn(2 * t, a) / 2 : (t == 1) ? 1 : bounceOut(2 * t - 1, a) / 2 + 0.5;
+	public static inline function bounceInOutAdv(t:Float, a:Float = 1.70158):Float {
+		return (t < 0.5) ? bounceInAdv(2 * t, a) / 2 : (t == 1) ? 1 : bounceOutAdv(2 * t - 1, a) / 2 + 0.5;
 	}
 
-	public static inline function bounceOutIn(t:Float, a:Float = 1.70158):Float {
+	public static inline function bounceOutInAdv(t:Float, a:Float = 1.70158):Float {
 		return (t < 0.5) ? bounceHelperOut(t * 2, 0.5, a) : 1 - bounceHelperOut(2 - 2 * t, 0.5, a);
 	}
 
@@ -193,10 +193,10 @@ class Ease {
 	}
 	
 	// Elastic
-	public static inline var elasticIn = elasticInAdv.bind(_, 1, 0.4);
-	public static inline var elasticOut = elasticOutAdv.bind(_, 1, 0.4);
-	public static inline var elasticInOut = elasticInOutAdv.bind(_, 1, 0.4);
-	public static inline var elasticOutIn = elasticOutInAdv.bind(_, 1, 0.4);
+	public static inline function elasticIn(t:Float):Float return elasticInAdv.bind(_, 1, 0.4)(t);
+	public static inline function elasticOut(t:Float):Float return elasticOutAdv.bind(_, 1, 0.4)(t);
+	public static inline function elasticInOut(t:Float):Float return elasticInOutAdv.bind(_, 1, 0.4)(t);
+	public static inline function elasticOutIn(t:Float):Float return elasticOutInAdv.bind(_, 1, 0.4)(t);
 	
 	public static inline function elasticInAdv(t:Float, amp:Float, period:Float):Float {
 		return elasticHelperIn(t, 0, 1, 1, amp, period);
@@ -382,6 +382,6 @@ class Ease {
 		return (t < 0.5) ? sineOut(2 * t) / 2 : sineIn(2 * t - 1) / 2 + 0.5;
 	}
 	
-	
+	public static inline function linear(t:Float):Float return t;
 	
 }
