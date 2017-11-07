@@ -93,8 +93,9 @@ class TimelineItem {
 		onUpdate(nextTime);
 	}
 	
-	public function isTimeInBounds(time:Float):Bool {
-		return (currentTime >= startTime && currentTime <= endTime);
+	public function isTimeInBounds(?time:Float):Bool {
+		var time = time == null ? currentTime : time;
+		return time >= startTime && time <= endTime;
 	}
 
 	private function get_duration():Float {
