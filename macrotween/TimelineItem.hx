@@ -25,7 +25,9 @@ class Boundary {
 	}
 }
 
-// Base class for anything that can go on a timeline
+/**
+ * The TimelineItem class is the base class for any object that can go on a timeline.
+ */
 class TimelineItem {
 	public var parent(default, null):Timeline;
 	
