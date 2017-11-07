@@ -1,4 +1,5 @@
 -cp macrotween
 -cp unit
+-lib utest
 -main TestAll
 -D utest
