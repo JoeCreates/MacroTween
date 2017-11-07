@@ -1,10 +1,10 @@
 package macrotween;
 
+#if (!flixel)
+
 #if macro
 import haxe.macro.Expr;
 #else
-
-#if (!flixel)
 
 // Based on FlxSignal from HaxeFlixel
 //
@@ -179,7 +179,16 @@ private class BaseSignal<T> implements ISignal<T>
 	
 	public inline function removeAll():Void
 	{
-		destroyArray(handlers);
+		if (handlers != null)
+		{
+			for (e in handlers) {
+				if (e != null)
+				{
+					e.destroy();
+				}
+			}
+			handlers.splice(0, handlers.length);
+		}
 	}
 	
 	public function destroy():Void
@@ -225,38 +234,6 @@ private class BaseSignal<T> implements ISignal<T>
 			}
 		}
 		return null; // Listener not yet registered.
-	}
-	
-	/**
-	 * Checks if an object is not null before calling destroy(), always returns null.
-	 *
-	 * @param	object	An IDestroyable object that will be destroyed if it's not null.
-	 * @return	null
-	 */
-	public static function destroy<T:IDestroyable>(object:Null<IDestroyable>):T
-	{
-		if (object != null)
-		{
-			object.destroy();
-		}
-		return null;
-	}
-	
-	/**
-	 * Destroy every element of an array of IDestroyables
-	 *
-	 * @param	array	An Array of IDestroyable objects
-	 * @return	null
-	 */
-	public static function destroyArray<T:IDestroyable>(array:Array<T>):Array<T>
-	{
-		if (array != null)
-		{
-			for (e in array)
-				destroy(e);
-			array.splice(0, array.length);
-		}
-		return null;
 	}
 }
 
@@ -330,12 +307,7 @@ private class Signal4<T1, T2, T3, T4> extends BaseSignal<T1->T2->T3->T4->Void>
 	}
 }
 
-interface IDestroyable
-{
-	public function destroy():Void;
-}
-
-interface ISignal<T> extends IDestroyable
+interface ISignal<T>
 {
 	public var dispatch:T;
 	public function add(listener:T):Void;
@@ -343,6 +315,7 @@ interface ISignal<T> extends IDestroyable
 	public function remove(listener:T):Void;
 	public function removeAll():Void;
 	public function has(listener:T):Bool;
+	public function destroy():Void;
 }
 
 #end
@@ -378,7 +351,7 @@ private class Macro
 
 import flixel.util.FlxSignal;
 
-typedef TypedSignal = FlxTypedSignal;
+typedef TypedSignal<T> = FlxTypedSignal<T>;
 typedef Signal = FlxTypedSignal<Void->Void>;
 
 #end
