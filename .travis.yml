@@ -15,9 +15,10 @@ haxe:
   - development
 
 install:
-  # We use Sure for sanity checking
-  - haxelib install sure
-  
+  # Try running the unit tests via travix
+  - haxelib install travix
+  - haxelib run travix install
+
   # Get the documentation generator
   - haxelib install dox
   
@@ -35,12 +36,24 @@ script:
   - ./generate_docs.sh
   - popd
   
-  # Build/run the unit tests
+  # Build/run the unit tests using the neko target
+  # Using the hxml that devs use day-to-day on a local machine
   - pushd unit
   - haxe tests.hxml -neko bin/neko.n
   - chmod +x ./bin/neko.n
   - neko bin/neko.n
   - popd
+  
+  # Run Travix for the rest of the targets
+  - haxelib run travix interp
+  - haxelib run travix neko
+  - haxelib run travix python
+  - haxelib run travix node
+  # - haxelib run travix flash
+  - haxelib run travix java
+  - haxelib run travix cpp
+  - haxelib run travix cs
+  - haxelib run travix php
 
 # Deploy the built haxelib to GitHub releases
 deploy:
