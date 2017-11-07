@@ -1,17 +1,11 @@
 package macrotween;
 
-#if (!flixel)
-
-#if macro
-import haxe.macro.Expr;
-#else
-
-// Based on FlxSignal from HaxeFlixel
+// The Signal classes in this file are adapted from HaxeFlixel's FlxSignal
 //
 // The MIT License (MIT)
 //
-// Copyright (c) 2009 Adam 'Atomic' Saltsman <br>
-// Copyright (c) 2012 Matt Tuttle <br>
+// Copyright (c) 2009 Adam 'Atomic' Saltsman
+// Copyright (c) 2012 Matt Tuttle
 // Copyright (c) 2013 [HaxeFlixel Team](https://github.com/HaxeFlixel?tab=members)
 //
 // Permission is hereby granted, free of charge, to any person
@@ -34,6 +28,14 @@ import haxe.macro.Expr;
 // WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // OTHER DEALINGS IN THE SOFTWARE.
+
+// If HaxeFlixel is not available, we use the signal
+// implementation based on HaxeFlixel's FlxSignal classes
+#if (!flixel)
+
+#if macro
+import haxe.macro.Expr;
+#else
 
 typedef Signal = TypedSignal<Void->Void>;
 
@@ -349,6 +351,8 @@ private class Macro
 
 #else
 
+// If "flixel" is defined, we assume that HaxeFlixel is available
+// and thus use FlxSignal from HaxeFlixel for the library's signals
 import flixel.util.FlxSignal;
 
 typedef TypedSignal<T> = FlxTypedSignal<T>;

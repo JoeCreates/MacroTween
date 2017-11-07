@@ -1,12 +1,15 @@
 package macrotween;
 
-import macrotween.Signal;
 import macrotween.TimelineItem.Boundary;
 
+/**
+ * The Timeline class helps organize multiple timeline items, such as Tweens,
+ * allowing them to be managed and manipulated as a group.
+ * Timelines are themselves timeline items, and so can be nested within each other.
+ */
 class Timeline extends TimelineItem {
-	public var onReset(default, null):Signal = new Signal();
+	public var items:List<TimelineItem>;
 
-	public var items:List<TimelineItem>; // TODO an interval tree might be faster
 	private var dirtyDuration:Bool;
 
 	public function new() {
@@ -34,7 +37,8 @@ class Timeline extends TimelineItem {
 		var currentTime = currentTime;
 		this.currentTime = nextTime;
 
-		removeMarked();
+		// TODO remove items that are complete/ready for removal
+		//removeMarked();
 
 		// TODO this won't trigger the boundary callbacks, because intersection checks were moved from the superclass to the timeline
 		super.stepTo(nextTime, currentTime);
@@ -76,7 +80,8 @@ class Timeline extends TimelineItem {
 		
 		for (item in items) item.stepTo(nextTime, currentTime);
 
-		removeMarked();
+		// TODO remove items that are complete/ready for removal
+		//removeMarked();
 	}
 
 	private inline function pointRangeIntersection(p:Float, x1:Float, x2:Float):Bool {
@@ -85,12 +90,6 @@ class Timeline extends TimelineItem {
 
 	private inline function rangesIntersect(x1:Float, x2:Float, y1:Float, y2:Float):Bool {
 		return ((Math.min(x1, x2) <= Math.max(y1, y2)) && (Math.min(y1, y2) <= Math.max(x1, x2)));
-	}
-
-	public function addCue(target:Dynamic, f:Bool->Int->Void, startTime:Float):Cue {
-		var cue = new Cue(startTime, f);
-		add(cue);
-		return cue;
 	}
 
 	public function add(item:TimelineItem):Void {
@@ -120,14 +119,6 @@ class Timeline extends TimelineItem {
 
 	public function itemTimeChanged(item:TimelineItem):Void {
 		dirtyDuration = true;
-	}
-
-	private function removeMarked():Void {
-		for (item in items) {
-			if (item.markedForRemoval) {
-				items.remove(item);
-			}
-		}
 	}
 
 	override private function get_duration():Float {

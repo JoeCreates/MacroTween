@@ -32,19 +32,16 @@ class TimelineItem {
 	/** Setting this will skip boundary triggering */
 	public var currentTime:Float;
 
-	public var startTime(default, set):Float;
+	@:isVar public var startTime(get, set):Float;
 	@:isVar public var duration(get, set):Float;
 	public var endTime(get, null):Float;
 
-	public var exitLeftLimit(default, null):Int;
-	public var exitRightLimit(default, null):Int;
 	public var isComplete(get, null):Bool;
-
-	public var removeOnCompletion(default, default):Bool;
-	public var markedForRemoval(default, default):Bool;
 
 	public var left:Boundary;
 	public var right:Boundary;
+	
+	public var onReset(default, null):Signal = new Signal();
 	public var onRemoved = new TypedSignal<Timeline->Void>();
 
 	public function new(?parent:Timeline, startTime:Float, duration:Float) {
@@ -56,12 +53,6 @@ class TimelineItem {
 		left = new Boundary(this);
 		right = new Boundary(this);
 
-		exitLeftLimit = 1;
-		exitRightLimit = 1;
-
-		removeOnCompletion = true;
-		markedForRemoval = false;
-
 		#if debug
 		onRemoved.add(function(parent:Timeline) {
 			trace("Removed timeline item from timeline");
@@ -70,8 +61,7 @@ class TimelineItem {
 	}
 
 	public function reset():Void {
-		// TODO reset boundary counts, remove signals?
-		markedForRemoval = false;
+
 	}
 
 	public function onUpdate(time:Float):Void {
@@ -79,14 +69,7 @@ class TimelineItem {
 	}
 
 	public function stepTo(nextTime:Float, ?currentTime:Float):Void {
-		if (markedForRemoval) {
-			return;
-		}
-		
 		if (isComplete) {
-			if (removeOnCompletion) {
-				markedForRemoval = true;
-			}
 			return;
 		}
 
@@ -109,6 +92,10 @@ class TimelineItem {
 		}
 		return duration;
 	}
+	
+	private function get_startTime():Float {
+		return this.startTime;
+	}
 
 	private function set_startTime(startTime:Float):Float {
 		this.startTime = startTime;
@@ -123,6 +110,6 @@ class TimelineItem {
 	}
 
 	private function get_isComplete():Bool {
-		return (left.rightToLeftCount >= exitLeftLimit && right.leftToRightCount >= exitRightLimit);
+		return false;
 	}
 }
