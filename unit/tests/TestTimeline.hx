@@ -26,7 +26,6 @@ class TestTimeline {
 	public function testTimelineNotEntered():Void {
 		tl.add(Tween.tween(1, 1, [a.a => _...10, a.b => 10..._], linear));
 		
-		tl.items.first().removeOnCompletion = false;
 		tl.stepTo(0.5);
 		
 		Assert.isTrue(a.a == 5);
@@ -36,7 +35,6 @@ class TestTimeline {
 	
 	public function testTimelineEntered():Void {
 		tl.add(Tween.tween(1, 1, [a.a => _...10, a.b => 10..._], linear));
-		tl.items.first().removeOnCompletion = false;
 		tl.stepTo(1.1);
 		Assert.isTrue(tl.items.first().isTimeInBounds(1.1));
 		Assert.isTrue(a.a == 5.5);

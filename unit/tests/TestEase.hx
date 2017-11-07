@@ -16,6 +16,6 @@ class TestEase {
 	}
 	
 	public function testQuad() {
-		Assert.isTrue(Ease.quadIn(0.5) == 0.5);
+		Assert.isTrue(Ease.quadIn(0.5) == 0.25);
 	}
 }

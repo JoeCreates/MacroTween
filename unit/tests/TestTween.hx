@@ -1,8 +1,6 @@
 package tests;
 
-import haxe.io.Path;
 import macrotween.Tween;
-import macrotween.Ease;
 import utest.Assert;
 
 /**
@@ -110,11 +108,13 @@ class TestTween {
 		var tween:Tween = Tween.tween(0, 1, [myObject => [x => 100, y => 100]], linear);
 		
 		tween.stepTo(0.0);
-		
+		Assert.isTrue(myObject.x == 0 && myObject.y == 0);
 		
 		tween.stepTo(0.5);
+		Assert.isTrue(myObject.x == 50 && myObject.y == 50);
 		
 		tween.stepTo(1.0);
+		Assert.isTrue(myObject.x == 100 && myObject.y == 100);
 	}
 	
 	public function testCompoundMultipleObjects() {
@@ -136,8 +136,8 @@ class TestTween {
 		//var myFunction = function (value:Float) {};
 		
 		//var tween:Tween = Tween.tween(0, 1, [myFunction(10...20)], linear);
-		// TODO
-		Assert.isTrue(true);
+		
+		Assert.isTrue(true); // TODO
 	}
 	
 	// TODO we have some variable name conflicts here in the values
