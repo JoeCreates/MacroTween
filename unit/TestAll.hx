@@ -1,6 +1,7 @@
 package;
 
 import tests.TestTimeline;
+import tests.TestTween;
 import utest.Runner;
 import utest.ui.Report;
 
@@ -10,6 +11,7 @@ import utest.ui.Report;
 class TestAll {
 	public static function addTests(runner:Runner) {
 		runner.addCase(new TestTimeline());
+		runner.addCase(new TestTween());
 	}
 
 	public static function main() {
