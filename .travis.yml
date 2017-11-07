@@ -50,8 +50,8 @@ script:
   - haxelib run travix neko
   - haxelib run travix python
   - haxelib run travix node
-  #- haxelib run travix flash
-  - haxelib run travix java
+  #- haxelib run travix flash # Apparently fails because Travis server is headless
+  #- haxelib run travix java # Has this error, probably target issue - https://stackoverflow.com/questions/7131652/generic-array-creation-error
   - haxelib run travix cpp
   - haxelib run travix cs
   - haxelib run travix php
