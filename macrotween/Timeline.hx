@@ -1,10 +1,10 @@
 package macrotween;
 
-import macrotween.signal.FlxSignal;
+import macrotween.Signal;
 import macrotween.TimelineItem.Boundary;
 
 class Timeline extends TimelineItem {
-	public var onReset(default, null) = new FlxSignal();
+	public var onReset(default, null):Signal = new Signal();
 
 	public var items:List<TimelineItem>; // TODO an interval tree might be faster
 	private var dirtyDuration:Bool;

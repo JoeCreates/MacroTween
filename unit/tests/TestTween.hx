@@ -40,6 +40,9 @@ class TestTween {
 		tween.stepTo(0);
 		Assert.isTrue(myObject.x == 50);
 		
+		tween.stepTo(0.5);
+		Assert.isTrue(myObject.x == 75);
+		
 		tween.stepTo(1);
 		Assert.isTrue(myObject.x == 100);
 	}
@@ -69,21 +72,17 @@ class TestTween {
 		Assert.isTrue(myObject.x == 20);
 	}
 	
-	public function testTweenLocals() {
+	public function testTweenLocal() {
 		var x:Float = 50;
 		var tween:Tween = Tween.tween(0, 1, [x => 100], linear);
 		
 		Assert.isTrue(x == 50);
 		
-		trace(tween);
-		
 		tween.stepTo(0.0);
 		Assert.isTrue(x == 50);
-		trace(x);
 		
 		tween.stepTo(0.5);
 		Assert.isTrue(x == 75);
-		trace(x);
 		
 		tween.stepTo(1.0);
 		Assert.isTrue(x == 100);
@@ -94,12 +93,28 @@ class TestTween {
 		var anotherObject:{ x:Float, y:Float, z:Float } = { x: 0, y: 0, z: 0 };
 		
 		var tween:Tween = Tween.tween(0, 1, [myObject.x => 100, anotherObject.x => 200], linear);
+		
+		tween.stepTo(0.0);
+		Assert.isTrue(myObject.x == 0 && anotherObject.x == 0);
+		
+		tween.stepTo(0.5);
+		Assert.isTrue(myObject.x == 50 && anotherObject.x == 100);
+		
+		tween.stepTo(1.0);
+		Assert.isTrue(myObject.x == 100 && anotherObject.x == 200);
 	}
 	
 	public function testCompoundMultipleFields() {
 		var myObject:{ x:Float, y:Float } = { x: 0, y: 0 };
 		
 		var tween:Tween = Tween.tween(0, 1, [myObject => [x => 100, y => 100]], linear);
+		
+		tween.stepTo(0.0);
+		
+		
+		tween.stepTo(0.5);
+		
+		tween.stepTo(1.0);
 	}
 	
 	public function testCompoundMultipleObjects() {

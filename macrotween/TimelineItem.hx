@@ -1,6 +1,6 @@
 package macrotween;
 
-import macrotween.signal.FlxSignal;
+import macrotween.Signal;
 
 // TODO events (boundaries) should be queued up to happen in correct order when many are passed
 
@@ -9,11 +9,11 @@ class Boundary {
 	public var leftToRightCount:Int = 0;
 	public var rightToLeftCount:Int = 0;
 	
-	public var onCrossed:FlxTypedSignal<Bool->Int->Void>;
+	public var onCrossed:TypedSignal<Bool->Int->Void>;
 
 	public inline function new(parent:TimelineItem) {
 		this.parent = parent;
-		this.onCrossed = new FlxTypedSignal<Bool->Int->Void>();
+		this.onCrossed = new TypedSignal<Bool->Int->Void>();
 	}
 
 	public function add(f:Bool->Int->Void):Void {
@@ -45,7 +45,7 @@ class TimelineItem {
 
 	public var left:Boundary;
 	public var right:Boundary;
-	public var onRemoved = new FlxTypedSignal<Timeline->Void>();
+	public var onRemoved = new TypedSignal<Timeline->Void>();
 
 	public function new(?parent:Timeline, startTime:Float, duration:Float) {
 		this.parent = parent;
