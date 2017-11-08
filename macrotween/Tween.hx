@@ -65,6 +65,7 @@ class Tween extends TimelineItem {
 		
 		var handleAssignment;
 		var readArray;
+		var handleFunction;
 		
 		handleAssignment = function(fieldExpr:Expr, key:Expr, v:Expr) {
 			// Handle array of keys
@@ -108,6 +109,7 @@ class Tween extends TimelineItem {
 					} else {
 						endValue = e2;
 					}
+					
 				// By default, use the whole expression as end value
 				case _:
 					implicitStart = macro true;
@@ -131,14 +133,47 @@ class Tween extends TimelineItem {
 			}});
 		}
 		
+		var handleFunction = function(fieldExpr:Expr, e:Expr, params:Array<Expr>) {
+			// Replace ranges in the params with interpolation expressions
+			for (i in 0...params.length) {
+				switch (params[i].expr) {
+					case EBinop(op, e1, e2) if (Type.enumEq(op, OpInterval)):
+						params[i] = macro {$e1 + progress * ($e2 - $e1); };
+					case _:
+				}
+			}
+			
+			// Make full function call expr
+			var funcExpr = fieldExpr != null ? combineFieldExpr(fieldExpr, e) : e;
+			var callExpr:Expr = macro {$funcExpr($a{params}); };
+			
+			// Makes the tweener object and adds it to array
+			tweenerObjects.push(macro {{//TODO what to do with unneeded values
+				startValue: 0,
+				endValue: 0,
+				implicitStart: false,
+				implicitEnd: false,
+				currentValue: function():Float {
+					return null;
+				},
+				tween: function (startValue:Float, endValue:Float, tween:Tween, time:Float):Void {
+					var progress:Float = tween.ease(Tween.progressFraction(time, tween.startTime, tween.endTime));
+					${callExpr};
+				}
+			}});
+		}
+		
 		readArray = function(fieldExpr:Expr, ar:Array<Expr>) {
 			for (arExp in ar) {
 				switch (arExp.expr) {
 					// => Operation
 					case EBinop(op, key, v) if (Type.enumEq(op, OpArrow)):
 						handleAssignment(fieldExpr, key, v);
+					// myFunc(...)
+					case ECall(e, params):
+						handleFunction(fieldExpr, e, params);
 					case _:
-						throw("Elements must use arrow operators (=>)");
+						throw("Elements must use arrow operators (=>) or call a function");
 				}
 			}
 		}
