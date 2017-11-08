@@ -118,12 +118,18 @@ class TestTween {
 	}
 	
 	public function testCompoundMultipleObjects() {
-		//var myObject:{ x:Float, y:Float } = { x: 0, y: 0 };
-		//var anotherObject:{ x:Float, y:Float, z:Float } = { x: 0, y : 0, z : 0 };
+		var myObject:{ x:Float, y:Float } = { x: 0, y: 0 };
+		var anotherObject:{ x:Float, y:Float, z:Float } = { x: 0, y : 0, z : 0 };
 		
-		//var tween:Tween = Tween.tween(0, 1, [[myObject, anotherObject] => [ x => 100, y => 200]], linear);
+		var tween:Tween = Tween.tween(0, 1, [[myObject, anotherObject] => [ x => 100, y => 200]], linear);
 		//TODO
-		Assert.isTrue(true);
+		Assert.isTrue(myObject.x == 0);
+		
+		tween.stepTo(0.5);
+		
+		Assert.isTrue(myObject.x == 50);
+		Assert.isTrue(anotherObject.x == 50);
+		
 	}
 	
 	public function testImplicitStartOrEnd() {
@@ -133,11 +139,16 @@ class TestTween {
 	}
 	
 	public function testFunctionTween() {
-		//var myFunction = function (value:Float) {};
+		var x:Float = 0;
+		var myFunction = function (value:Float, add:Float):Void {
+			x = value + add;
+		};
 		
-		//var tween:Tween = Tween.tween(0, 1, [myFunction(10...20)], linear);
+		var tween:Tween = Tween.tween(0, 1, [myFunction(10...20, 10)], linear);
 		
-		Assert.isTrue(true); // TODO
+		Assert.isTrue(x == 0);
+		tween.stepTo(0.5);
+		Assert.isTrue(x == 25);
 	}
 	
 	// TODO we have some variable name conflicts here in the values
