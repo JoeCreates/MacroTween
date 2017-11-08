@@ -63,63 +63,80 @@ class Tween extends TimelineItem {
 			return Context.parseInlineString(p.printExprs([e1, e2], "."), Context.currentPos());
 		}
 		
+		var handleAssignment;
 		var readArray;
+		
+		handleAssignment = function(fieldExpr:Expr, key:Expr, v:Expr) {
+			// Handle array of keys
+			switch (key.expr) {
+				case EArrayDecl(keyAr):
+					for (arrayKey in keyAr) {
+						handleAssignment(fieldExpr, arrayKey, v);
+					}
+					return;
+				case _:
+			}
+			
+			var startValue:Expr = macro 0;
+			var endValue:Expr = macro 0;
+			var implicitStart:Expr = macro false;
+			var implicitEnd:Expr = macro false;
+			
+			// Combination of current field expr and map key
+			var combinedField:Expr;
+			if (fieldExpr == null) {
+				combinedField = key;
+			} else {
+				combinedField = combineFieldExpr(fieldExpr, key);
+			}
+			
+			// Interpret value expressions
+			switch (v.expr) {
+				// [] means recurse passing down current field expr
+				case EArrayDecl(ar):
+					readArray(combinedField, ar);
+					return;
+				// a...b means tween from a to b
+				case EBinop(op, e1, e2) if (Type.enumEq(op, OpInterval)):
+					if (Type.enumEq(e1.expr, (macro _).expr)) {
+						implicitStart = macro true;
+					} else {
+						startValue = e1;
+					}
+					if (Type.enumEq(e2.expr, (macro _).expr)) {
+						implicitEnd = macro true;
+					} else {
+						endValue = e2;
+					}
+				// By default, use the whole expression as end value
+				case _:
+					implicitStart = macro true;
+					endValue = v;
+			}
+			
+			// Makes the tweener object and adds it to array
+			tweenerObjects.push(macro {{
+				startValue: $startValue,
+				endValue: $endValue,
+				implicitStart: $implicitStart,
+				implicitEnd: $implicitEnd,
+				currentValue: function():Float {
+					return ${combinedField};
+				},
+				tween: function (startValue:Float, endValue:Float, tween:Tween, time:Float):Void {
+					var progress:Float = tween.ease(Tween.progressFraction(time, tween.startTime, tween.endTime));
+					// Sets value by interpolation
+					${combinedField} = startValue + progress * (endValue - startValue);
+				}
+			}});
+		}
+		
 		readArray = function(fieldExpr:Expr, ar:Array<Expr>) {
 			for (arExp in ar) {
 				switch (arExp.expr) {
+					// => Operation
 					case EBinop(op, key, v) if (Type.enumEq(op, OpArrow)):
-						var startValue:Expr = macro 0;
-						var endValue:Expr = macro 0;
-						var implicitStart:Expr = macro false;
-						var implicitEnd:Expr = macro false;
-						
-						// Combination of current field expr and map key
-						var combinedField:Expr;
-						if (fieldExpr == null) {
-							combinedField = key;
-						} else {
-							combinedField = combineFieldExpr(fieldExpr, key);
-						}
-						
-						// Interpret value expressions
-						switch (v.expr) {
-							// [] means recurse passing down current field expr
-							case EArrayDecl(ar):
-								readArray(combinedField, ar);
-								continue;
-							// a...b means tween from a to b
-							case EBinop(op, e1, e2) if (Type.enumEq(op, OpInterval)):
-								if (Type.enumEq(e1.expr, (macro _).expr)) {
-									implicitStart = macro true;
-								} else {
-									startValue = e1;
-								}
-								if (Type.enumEq(e2.expr, (macro _).expr)) {
-									implicitEnd = macro true;
-								} else {
-									endValue = e2;
-								}
-							// By default, use the whole expression as end value
-							case _:
-								implicitStart = macro true;
-								endValue = v;
-						}
-						
-						// Makes the tweener object and adds it to array
-						tweenerObjects.push(macro {{
-							startValue: $startValue,
-							endValue: $endValue,
-							implicitStart: $implicitStart,
-							implicitEnd: $implicitEnd,
-							currentValue: function():Float {
-								return ${combinedField};
-							},
-							tween: function (startValue:Float, endValue:Float, tween:Tween, time:Float):Void {
-								var progress:Float = tween.ease(Tween.progressFraction(time, tween.startTime, tween.endTime));
-								// Sets value by interpolation
-								${combinedField} = startValue + progress * (endValue - startValue);
-							}
-						}});
+						handleAssignment(fieldExpr, key, v);
 					case _:
 						throw("Elements must use arrow operators (=>)");
 				}

@@ -74,7 +74,7 @@ class TimelineItem {
 		if (isComplete) {
 			return;
 		}
-
+		
 		onUpdate(nextTime);
 	}
 	
