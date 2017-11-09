@@ -13,7 +13,7 @@ class TestTween {
 	
 	public function testTweenToValue() {
 		var myObject:{ x:Float } = { x: 0 };
-		var tween:Tween = Tween.tween(0, 1, [myObject.x => 100], linear);
+		var tween:Tween = Tween.tween(0, 1, myObject.x => 100, linear);
 		
 		tween.stepTo(0);
 		Assert.isTrue(myObject.x == 0);

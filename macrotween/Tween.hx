@@ -63,6 +63,7 @@ class Tween extends TimelineItem {
 			return Context.parseInlineString(p.printExprs([e1, e2], "."), Context.currentPos());
 		}
 		
+		var readExpr;
 		var handleAssignment;
 		var readArray;
 		var handleFunction;
@@ -165,25 +166,28 @@ class Tween extends TimelineItem {
 		
 		readArray = function(fieldExpr:Expr, ar:Array<Expr>) {
 			for (arExp in ar) {
-				switch (arExp.expr) {
-					// => Operation
-					case EBinop(op, key, v) if (Type.enumEq(op, OpArrow)):
-						handleAssignment(fieldExpr, key, v);
-					// myFunc(...)
-					case ECall(e, params):
-						handleFunction(fieldExpr, e, params);
-					case _:
-						throw("Elements must use arrow operators (=>) or call a function");
-				}
+				readExpr(fieldExpr, arExp);
 			}
 		}
 		
-		switch (tweeners.expr) {
-			case EArrayDecl(ar):
-				readArray(null, ar);
-			case _:
-				throw("Expression must be array");
+		readExpr = function(fieldExpr:Expr, e:Expr) {
+			switch (e.expr) {
+				// [] Array
+				case EArrayDecl(ar):
+					readArray(fieldExpr, ar);
+				// => Operation
+				case EBinop(op, key, v) if (Type.enumEq(op, OpArrow)):
+					handleAssignment(fieldExpr, key, v);
+				// myFunc(...)
+				case ECall(e, params):
+					handleFunction(fieldExpr, e, params);
+				case _:
+					throw("Invalid expression in tween");
+			}
 		}
+		
+		
+		readExpr(null, tweeners);
 		
 		// Return the new Tween object
 		return macro {new Tween(${startTime}, ${duration}, $a{tweenerObjects}, ${ease});};
