@@ -32,7 +32,7 @@ class TimelineItem {
 	public var parent(default, null):Timeline;
 	
 	/** Setting this will skip boundary triggering */
-	public var currentTime:Float;
+	public var currentTime:Null<Float>;
 
 	@:isVar public var startTime(get, set):Float;
 	@:isVar public var duration(get, set):Float;
@@ -48,7 +48,7 @@ class TimelineItem {
 
 	public function new(?parent:Timeline, startTime:Float, duration:Float) {
 		this.parent = parent;
-		this.currentTime = 0;
+		this.currentTime = null;
 		this.startTime = startTime;
 		this.duration = duration;
 
@@ -74,6 +74,19 @@ class TimelineItem {
 		if (isComplete) {
 			return;
 		}
+		
+		// TODO bound handling goes in here
+		
+		//if (currentTime == null) {
+			//currentTime = nextTime;//TODO
+		//}
+		//
+		//if (currentTime == startTimecurrentTime < startTime && nextTime >= startTime) {
+			//
+		//}
+		//else if (currentTime < endTime && nextTime >= endTime) {
+			//
+		//}
 		
 		onUpdate(nextTime);
 	}

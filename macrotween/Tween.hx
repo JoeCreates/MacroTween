@@ -126,10 +126,11 @@ class Tween extends TimelineItem {
 				currentValue: function():Float {
 					return ${combinedField};
 				},
-				tween: function (startValue:Float, endValue:Float, tween:Tween, time:Float):Void {
-					var progress:Float = tween.ease(Tween.progressFraction(time, tween.startTime, tween.endTime));
+				tween: function (_macroTween_startValue:Float, _macroTween_endValue:Float, _macroTween_tween:Tween, _macroTween_time:Float):Void {
+					var _macroTween_progress:Float = _macroTween_tween.ease(
+						Tween.progressFraction(_macroTween_time, _macroTween_tween.startTime, _macroTween_tween.endTime));
 					// Sets value by interpolation
-					${combinedField} = startValue + progress * (endValue - startValue);
+					${combinedField} = _macroTween_startValue + _macroTween_progress * (_macroTween_endValue - _macroTween_startValue);
 				}
 			}});
 		}
@@ -139,7 +140,7 @@ class Tween extends TimelineItem {
 			for (i in 0...params.length) {
 				switch (params[i].expr) {
 					case EBinop(op, e1, e2) if (Type.enumEq(op, OpInterval)):
-						params[i] = macro {$e1 + progress * ($e2 - $e1); };
+						params[i] = macro {$e1 + _macroTween_progress * ($e2 - $e1); };
 					case _:
 				}
 			}
@@ -157,8 +158,9 @@ class Tween extends TimelineItem {
 				currentValue: function():Float {
 					return null;
 				},
-				tween: function (startValue:Float, endValue:Float, tween:Tween, time:Float):Void {
-					var progress:Float = tween.ease(Tween.progressFraction(time, tween.startTime, tween.endTime));
+				tween: function (_macroTween_startValue:Float, _macroTween_endValue:Float, _macroTween_tween:Tween, _macroTween_time:Float):Void {
+					var _macroTween_progress:Float = _macroTween_tween.ease(
+						Tween.progressFraction(_macroTween_time, _macroTween_tween.startTime, _macroTween_tween.endTime));
 					${callExpr};
 				}
 			}});

@@ -31,6 +31,17 @@ class TestTween {
 		Assert.isTrue(myObject.x == 100);
 	}
 	
+	public function testMultiVariableSameValueTween() {
+		var myObject:{ scale:{x:Float, y:Float}, position:{x:Float, y:Float}} = { scale: {x: 0, y: 0}, position: {x: 0, y: 0} };
+		var tween:Tween = Tween.tween(0, 1, myObject => [[scale, position] => [[x, y] => 100]], linear);
+		
+		tween.stepTo(0);
+		Assert.isTrue(myObject.position.x == 0 && myObject.scale.y == 0);
+
+		tween.stepTo(0.5);
+		Assert.isTrue(myObject.position.x == 50 && myObject.scale.y == 50);
+	}
+	
 	public function testTweenToValue2() {
 		var myObject:{ x:Float } = { x: 50 };
 		var tween:Tween = Tween.tween(0, 1, [myObject.x => 100], linear);
@@ -158,10 +169,13 @@ class TestTween {
 		var startValue:Float = 0;
 		var endValue:Float = 0;
 		
-		Assert.isTrue(true); // TODO
-		//Tween.tween(0, 1, [time => 100], linear); // TODO name clash - silent failure
-		//Tween.tween(0, 1, [tween => 100], linear); // TODO name clash - compile error
-		//Tween.tween(0, 1, [startValue => 100], linear); // TODO name clash - silent failure
-		//Tween.tween(0, 1, [endValue => 100], linear); // TODO name clash - silent failure
+		var t1 = Tween.tween(0, 1, [time => 100], linear); // TODO name clash - silent failure
+		var t2 = Tween.tween(0, 1, [tween => 100], linear); // TODO name clash - compile error
+		var t3 = Tween.tween(0, 1, [startValue => 100], linear); // TODO name clash - silent failure
+		var t4 = Tween.tween(0, 1, [endValue => 100], linear); // TODO name clash - silent failure
+		
+		for (t in [t1, t2, t3, t4]) t.stepTo(0.5);
+		
+		Assert.isTrue(time == 50 && tween == 50 && startValue == 50 && endValue == 50);
 	}
 }

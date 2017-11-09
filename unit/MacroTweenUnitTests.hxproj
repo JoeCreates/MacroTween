@@ -4,13 +4,13 @@
   <output>
     <movie outputType="CustomBuild" />
     <movie input="" />
-    <movie path="project.xml" />
+    <movie path="tests.xml" />
     <movie fps="0" />
     <movie width="0" />
     <movie height="0" />
     <movie version="0" />
     <movie minorVersion="0" />
-    <movie platform="Custom" />
+    <movie platform="hxml" />
     <movie background="#FFFFFF" />
   </output>
   <!-- Other classes to be compiled into your SWF -->
