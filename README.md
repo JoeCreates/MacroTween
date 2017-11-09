@@ -12,28 +12,28 @@ MacroTween offers concise tweening without reflection, providing unrivalled perf
 ```haxe
 // Concise arrow syntax
 // Tween myObject.x to 100
-Tween.tween(0, 1, [myObject.x => 100], Ease.quadInOut);
+Tween.tween(0, 1, myObject.x => 100], Ease.quadInOut);
 
 // Specify ranges
-Tween.tween(0, 1, [myObject.x => 10...20]);
+Tween.tween(0, 1, myObject.x => 10...20);
 
 // Tween local variables
 var x:Float = 10;
-Tween.tween(0, 1, [x => 100]);
+Tween.tween(0, 1, x => 100);
 
 // Tween multiple objects at once
 Tween.tween(0, 1, [object1.x => 100, object2.x => 200]);
 
 // Compound expressions
-Tween.tween(0, 1, [obj => [x => 100, y => 100]]);
-Tween.tween(0, 1, [[objA, objB] => [x => 100, y => 100]]);
+Tween.tween(0, 1, obj => [x => 100, y => 100]);
+Tween.tween(0, 1, [objA, objB] => [x => 100, y => 100]);
 
 // Implicit start or end values
 // A reverse tween from t=1...0 would tween from whatever the initial value is to 10
-Tween.tween(0, 1, [myObject.x => 10..._]);
+Tween.tween(0, 1, myObject.x => 10..._);
 
 // Repeatedly call function with tweening parameters
-Tween.tween(0, 1, [myFunc(10...20)]);
+Tween.tween(0, 1, myFunc(10...20));
 
 ```
 
