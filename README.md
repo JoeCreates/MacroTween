@@ -12,7 +12,7 @@ MacroTween offers concise tweening without reflection, providing unrivalled perf
 ```haxe
 // Concise arrow syntax
 // Tween myObject.x to 100
-Tween.tween(0, 1, myObject.x => 100] Ease.quadInOut);
+Tween.tween(0, 1, myObject.x => 100], Ease.quadInOut);
 
 // Specify ranges
 Tween.tween(0, 1, myObject.x => 10...20);
