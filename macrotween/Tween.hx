@@ -63,17 +63,17 @@ class Tween extends TimelineItem {
 			return Context.parseInlineString(p.printExprs([e1, e2], "."), Context.currentPos());
 		}
 		
-		var readExpr;
-		var handleAssignment;
-		var readArray;
+		var handleExpr;
+		var handleArrow;
+		var handleArray;
 		var handleFunction;
 		
-		handleAssignment = function(fieldExpr:Expr, key:Expr, v:Expr) {
+		handleArrow = function(fieldExpr:Expr, key:Expr, v:Expr) {
 			// Handle array of keys
 			switch (key.expr) {
 				case EArrayDecl(keyAr):
 					for (arrayKey in keyAr) {
-						handleAssignment(fieldExpr, arrayKey, v);
+						handleArrow(fieldExpr, arrayKey, v);
 					}
 					return;
 				case _:
@@ -96,7 +96,7 @@ class Tween extends TimelineItem {
 			switch (v.expr) {
 				// [] means recurse passing down current field expr
 				case EArrayDecl(ar):
-					readArray(combinedField, ar);
+					handleArray(combinedField, ar);
 					return;
 				// a...b means tween from a to b
 				case EBinop(op, e1, e2) if (Type.enumEq(op, OpInterval)):
@@ -164,21 +164,21 @@ class Tween extends TimelineItem {
 			}});
 		}
 		
-		readArray = function(fieldExpr:Expr, ar:Array<Expr>) {
+		handleArray = function(fieldExpr:Expr, ar:Array<Expr>) {
 			for (arExp in ar) {
-				readExpr(fieldExpr, arExp);
+				handleExpr(fieldExpr, arExp);
 			}
 		}
 		
-		readExpr = function(fieldExpr:Expr, e:Expr) {
+		handleExpr = function(fieldExpr:Expr, e:Expr) {
 			switch (e.expr) {
 				// [] Array
 				case EArrayDecl(ar):
-					readArray(fieldExpr, ar);
-				// => Operation
+					handleArray(fieldExpr, ar);
+				// => Arrow
 				case EBinop(op, key, v) if (Type.enumEq(op, OpArrow)):
-					handleAssignment(fieldExpr, key, v);
-				// myFunc(...)
+					handleArrow(fieldExpr, key, v);
+				// myFunc(...) Function call
 				case ECall(e, params):
 					handleFunction(fieldExpr, e, params);
 				case _:
@@ -186,8 +186,7 @@ class Tween extends TimelineItem {
 			}
 		}
 		
-		
-		readExpr(null, tweeners);
+		handleExpr(null, tweeners);
 		
 		// Return the new Tween object
 		return macro {new Tween(${startTime}, ${duration}, $a{tweenerObjects}, ${ease});};
