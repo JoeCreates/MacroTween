@@ -156,7 +156,7 @@ class Tween extends TimelineItem {
 				implicitStart: false,
 				implicitEnd: false,
 				currentValue: function():Float {
-					return null;
+					return 0;//TODO what to do with this?
 				},
 				tween: function (_macroTween_startValue:Float, _macroTween_endValue:Float, _macroTween_tween:Tween, _macroTween_time:Float):Void {
 					var _macroTween_progress:Float = _macroTween_tween.ease(
