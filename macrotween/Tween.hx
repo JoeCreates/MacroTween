@@ -39,13 +39,14 @@ class Tween extends TimelineItem {
 		this.currentTime = time;
 		
 		if (isTimeInBounds(time)) {
-			for (tweener in tweeners) {
+			for (i in 0...tweeners.length) {
+				var tweener = tweeners[i];
 				tweener.tween(tweener.startValue, tweener.endValue, this, time);
 			}
 		}
 	}
 
-	public static function progressFraction(time:Float, start:Float, end:Float):Float {
+	public static inline function progressFraction(time:Float, start:Float, end:Float):Float {
 		if (start == end) {
 			return 0.5;
 		}
@@ -55,7 +56,7 @@ class Tween extends TimelineItem {
 	
 #end
 	
-	public static macro function tween(startTime:Expr, duration:Expr, tweeners:Expr, ease:Expr):Expr {
+	public static macro function tween(startTime:Expr, duration:Expr, tweeners:Expr, ?ease:Expr):Expr {
 		var tweenerObjects:Array<Expr> = [];
 		
 		var p = new Printer();
@@ -118,21 +119,20 @@ class Tween extends TimelineItem {
 			}
 			
 			// Makes the tweener object and adds it to array
-			tweenerObjects.push(macro {{
-				startValue: $startValue,
-				endValue: $endValue,
-				implicitStart: $implicitStart,
-				implicitEnd: $implicitEnd,
-				currentValue: function():Float {
-					return ${combinedField};
-				},
-				tween: function (_macroTween_startValue:Float, _macroTween_endValue:Float, _macroTween_tween:Tween, _macroTween_time:Float):Void {
-					var _macroTween_progress:Float = _macroTween_tween.ease(
-						Tween.progressFraction(_macroTween_time, _macroTween_tween.startTime, _macroTween_tween.endTime));
-					// Sets value by interpolation
-					${combinedField} = _macroTween_startValue + _macroTween_progress * (_macroTween_endValue - _macroTween_startValue);
-				}
-			}});
+			tweenerObjects.push(macro {
+				new Tweener($startValue, $endValue, $implicitStart, $implicitEnd,
+					function():Float {
+						return ${combinedField};
+					},
+					function (_macroTween_startValue:Float, _macroTween_endValue:Float, _macroTween_tween:Tween, _macroTween_time:Float):Void {
+						var _macroTween_progress:Float =
+							Tween.progressFraction(_macroTween_time, _macroTween_tween.startTime, _macroTween_tween.endTime);
+						if (_macroTween_tween.ease != null) _macroTween_progress = _macroTween_tween.ease(_macroTween_progress);
+						// Sets value by interpolation
+						${combinedField} = _macroTween_startValue + _macroTween_progress * (_macroTween_endValue - _macroTween_startValue);
+					}
+				);
+			});
 		}
 		
 		var handleFunction = function(fieldExpr:Expr, e:Expr, params:Array<Expr>) {
@@ -150,20 +150,19 @@ class Tween extends TimelineItem {
 			var callExpr:Expr = macro {$funcExpr($a{params}); };
 			
 			// Makes the tweener object and adds it to array
-			tweenerObjects.push(macro {{//TODO what to do with unneeded values
-				startValue: 0,
-				endValue: 0,
-				implicitStart: false,
-				implicitEnd: false,
-				currentValue: function():Float {
-					return 0;//TODO what to do with this?
-				},
-				tween: function (_macroTween_startValue:Float, _macroTween_endValue:Float, _macroTween_tween:Tween, _macroTween_time:Float):Void {
-					var _macroTween_progress:Float = _macroTween_tween.ease(
-						Tween.progressFraction(_macroTween_time, _macroTween_tween.startTime, _macroTween_tween.endTime));
-					${callExpr};
-				}
-			}});
+			tweenerObjects.push(macro {//TODO what to do with unneeded values
+				new Tweener(0, 0, false, false, 
+					function():Float {
+						return 0;//TODO what to do with this?
+					},
+					function (_macroTween_startValue:Float, _macroTween_endValue:Float, _macroTween_tween:Tween, _macroTween_time:Float):Void {
+						var _macroTween_progress:Float =
+							Tween.progressFraction(_macroTween_time, _macroTween_tween.startTime, _macroTween_tween.endTime);
+						if (_macroTween_tween.ease != null) _macroTween_progress = _macroTween_tween.ease(_macroTween_progress);//TODO remove repetition
+						${callExpr};
+					}
+				);
+			});
 		}
 		
 		handleArray = function(fieldExpr:Expr, ar:Array<Expr>) {
@@ -190,17 +189,30 @@ class Tween extends TimelineItem {
 		
 		handleExpr(null, tweeners);
 		
+		if (ease == null) ease = macro null;
+		
 		// Return the new Tween object
 		return macro {new Tween(${startTime}, ${duration}, $a{tweenerObjects}, ${ease});};
 	}
 	
 }
 
-typedef Tweener = {
-	startValue:Float,
-	endValue:Float,
-	currentValue:Void->Float,
-	implicitStart:Bool,
-	implicitEnd:Bool,
-	tween:Float->Float->Tween->Float->Void
+class Tweener {
+	public var startValue:Float;
+	public var endValue:Float;
+	public var currentValue:Void->Float;
+	public var implicitStart:Bool;
+	public var implicitEnd:Bool;
+	public var tween:Float->Float->Tween->Float->Void;
+	
+	public function new(startValue:Float, endValue:Float, iStart:Bool, iEnd:Bool, currentValue:Void->Float, tween:TweenerFunc){
+		this.startValue = startValue;
+		this.endValue = endValue;
+		this.implicitEnd = iEnd;
+		this.implicitStart = iStart;
+		this.currentValue = currentValue;
+		this.tween = tween;
+	}
 }
+
+typedef TweenerFunc = Float->Float->Tween->Float->Void;

@@ -92,7 +92,7 @@ class TimelineItem {
 	}
 	
 	public function isTimeInBounds(?time:Float):Bool {
-		var time = time == null ? currentTime : time;
+		var t:Float = time == null ? currentTime : time;
 		return time >= startTime && time <= endTime;
 	}
 
