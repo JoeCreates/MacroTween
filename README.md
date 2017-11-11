@@ -5,7 +5,7 @@
 [![Code Climate](https://img.shields.io/codeclimate/issues/github/JoeCreates/MacroTween.svg?style=flat-square)](https://codeclimate.com/github/JoeCreates/MacroTween/issues)
 [![License](http://img.shields.io/:license-mit-blue.svg?style=flat-square)](https://github.com/JoeCreates/MacroTween/blob/master/LICENSE)
 
-MacroTween offers concise tweening without reflection, providing unrivalled performance and ease of use.
+MacroTween offers concise tweening and timelines.
 
 **WARNING: Currently in development and unstable!**
 
@@ -37,30 +37,3 @@ Tween.tween(0, 1, myObject.x => 10..._);
 Tween.tween(0, 1, myFunc(10...20));
 
 ```
-
-## How it works
-Unlike typical tweening libraries which use reflection, MacroTween generates a object with methods to return and set the value of a variable. For example:
-
-```haxe
-// This macro call...
-Tween.tween(0, 1, [myObj.x => 100]);
-
-// ...creates the following object
-{
-  startValue: null,
-  endValue: 100,
-  implicitStart: true,
-  implicitEnd: false,
-  currentValue:
-    function():Float {
-      return myObj.x
-    },
-  tween:
-    function(startValue:Float, endValue:Float, tween:Tween, time:Float):Void {
-      myObj.x = startValue + progress * (endValue - startValue);
-    }
-}
-```
-
-The `currentValue` and `tween` functions can be used to set and get the value of `myObj.x` without using reflection, providing considerable performance benefits.
-
