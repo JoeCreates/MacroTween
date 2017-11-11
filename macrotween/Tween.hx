@@ -1,11 +1,10 @@
 package macrotween;
 
+#if macro
 import haxe.macro.ExprTools;
 import haxe.macro.Printer;
 import haxe.macro.TypeTools;
 import haxe.macro.TypedExprTools;
-
-#if macro
 import haxe.macro.Expr;
 import haxe.macro.Context;
 #end
@@ -41,8 +40,6 @@ class Tween extends TimelineItem {
 	}
 
 	override public function onUpdate(time:Float):Void {
-		this.currentTime = time;
-		
 		if (isTimeInBounds(time)) {
 			for (i in 0...tweeners.length) {
 				var tweener = tweeners[i];

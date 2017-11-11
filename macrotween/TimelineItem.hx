@@ -14,6 +14,15 @@ class TimelineItem {
 	private var _isInBounds:Bool;
 	private var _isInBoundsDirty:Bool;
 	
+	public function new(startTime:Float, duration:Float) {
+		_isInBounds = false;
+		_isInBoundsDirty = true;
+		
+		this.currentTime = null;
+		this.startTime = startTime;
+		this.duration = duration;
+	}
+	
 	public function onReset():Void {
 		
 	}
@@ -36,15 +45,6 @@ class TimelineItem {
 		
 	}
 
-	public function new(startTime:Float, duration:Float) {
-		_isInBounds = false;
-		_isInBoundsDirty = true;
-		
-		this.currentTime = null;
-		this.startTime = startTime;
-		this.duration = duration;
-	}
-
 	public function reset():Void {
 
 	}
@@ -61,17 +61,34 @@ class TimelineItem {
 	 * Step to an absolute time on the timeline item
 	 * @param	nextTime Absolute time
 	 */
-	public function stepTo(nextTime:Float):Void {
-		if (currentTime == nextTime) {
+	public function stepTo(time:Float):Void {
+		if (currentTime == time) {
 			return;
 		}
 		
 		// TODO
-		var lastTime:Float = currentTime;
+		var lastTime:Null<Float> = currentTime;
 		
-		updateBounds(nextTime);
+		var leftHit:Bool = lastTime != null &&
+			((lastTime < startTime && currentTime >= startTime) || (lastTime > startTime && currentTime <= startTime));
+		var rightHit:Bool = lastTime != null &&
+			((lastTime < endTime && currentTime >= endTime) || (lastTime > endTime && currentTime <= endTime));
+		var rev:Bool = lastTime != null && lastTime > time;
 		
-		onUpdate(nextTime);
+		if (leftHit || rightHit) {
+			if (rev) {
+				if (rightHit) stepTo(endTime);
+				if (leftHit) stepTo(startTime);
+				if (time != startTime) stepTo(time);
+			} else {
+				if (leftHit) stepTo(startTime);
+				if (rightHit) stepTo(endTime);	
+				if (time != endTime) stepTo(time);		
+			}
+		} else {
+			updateBounds(time);
+			onUpdate(time);
+		}
 	}
 	
 	public function onUpdate(time:Float):Void {
