@@ -119,7 +119,7 @@ class TimelineItem {
 	
 	public function isTimeInBounds(?time:Float):Bool {
 		var t:Float = time == null ? currentTime : time;
-		return time >= startTime && time <= endTime;
+		return t >= startTime && t <= endTime;
 	}
 
 	private function get_duration():Float {
