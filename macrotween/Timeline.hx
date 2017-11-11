@@ -75,7 +75,7 @@ class Timeline extends TimelineItem {
 
 #end
 
-	public static macro function tween(startTime:Expr, duration:Expr, tweeners:Expr, ?ease:Expr):Timeline {
+	public macro function tween(startTime:Expr, duration:Expr, tweeners:Expr, ?ease:Expr):Timeline {
 		return add(Tween.tween(startTime, duration, tweeners, ease));
 	}
 }

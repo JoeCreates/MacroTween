@@ -167,7 +167,7 @@ class Tween extends TimelineItem {
 					},
 					function (_macroTween_startValue:Float, _macroTween_endValue:Float, _macroTween_tween:Tween, _macroTween_time:Float):Void {
 						var _macroTween_progress:Float =
-							Tween.progressFraction(_macroTween_time, _macroTween_tween.startTime, _macroTween_tween.endTime);
+							TimelineItem.progressFraction(_macroTween_time, _macroTween_tween.startTime, _macroTween_tween.endTime);
 						if (_macroTween_tween.ease != null) _macroTween_progress = _macroTween_tween.ease(_macroTween_progress);//TODO remove repetition
 						${callExpr};
 					}
