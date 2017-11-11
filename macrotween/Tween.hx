@@ -1,5 +1,7 @@
 package macrotween;
 
+import macrotween.TimelineItem;
+
 #if macro
 import haxe.macro.ExprTools;
 import haxe.macro.Printer;
@@ -136,7 +138,7 @@ class Tween extends TimelineItem {
 					},
 					function (_macroTween_startValue:Float, _macroTween_endValue:Float, _macroTween_tween:Tween, _macroTween_time:Float):Void {
 						var _macroTween_progress:Float =
-							TimelineItem.progressFraction(_macroTween_time, _macroTween_tween.startTime, _macroTween_tween.endTime);
+							macrotween.TimelineItem.progressFraction(_macroTween_time, _macroTween_tween.startTime, _macroTween_tween.endTime);
 						if (_macroTween_tween.ease != null) _macroTween_progress = _macroTween_tween.ease(_macroTween_progress);
 						// Sets value by interpolation
 						${combinedField} = _macroTween_startValue + _macroTween_progress * (_macroTween_endValue - _macroTween_startValue);
@@ -167,7 +169,7 @@ class Tween extends TimelineItem {
 					},
 					function (_macroTween_startValue:Float, _macroTween_endValue:Float, _macroTween_tween:Tween, _macroTween_time:Float):Void {
 						var _macroTween_progress:Float =
-							TimelineItem.progressFraction(_macroTween_time, _macroTween_tween.startTime, _macroTween_tween.endTime);
+							macrotween.TimelineItem.progressFraction(_macroTween_time, _macroTween_tween.startTime, _macroTween_tween.endTime);
 						if (_macroTween_tween.ease != null) _macroTween_progress = _macroTween_tween.ease(_macroTween_progress);//TODO remove repetition
 						${callExpr};
 					}
@@ -193,7 +195,8 @@ class Tween extends TimelineItem {
 				case ECall(e, params):
 					handleFunction(fieldExpr, e, params);
 				case _:
-					throw("Invalid expression in tween");
+					trace(fieldExpr + " " + e);
+					throw("Invalid expression in tweeners");
 			}
 		}
 		

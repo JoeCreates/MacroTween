@@ -11,7 +11,7 @@ import utest.Assert;
 class TestTimeline {
 	var tl:Timeline;
 	var a:{a:Float, b:Float};
-	var b:Float;
+	public var b:Float;
 	
 	function linear(x:Float) { return x; }
 	
@@ -41,13 +41,13 @@ class TestTimeline {
 	public function testCallbackOrders():Void {
 		var tl = new Timeline();
 		
-		tl.tween(0, 1, a => 10);
+		tl.tween(0, 1, b => 10);
 		tl.stepTo(2);
 		Assert.isTrue(b == 10);
 	}
 	
 	public function testChaining():Void {
-		var tl = new Timeline();
+		var tl:Timeline = new Timeline();
 		tl.tween(0, 1, b => 10).tween(0, 1, a.a => 20).stepTo(1);
 		Assert.isTrue(a.a == 20 && b == 10);
 	}
@@ -55,8 +55,13 @@ class TestTimeline {
 
 class CallbackTween extends Tween {
 	public function new(startTime:Float, duration:Float, tweeners:Array<Tweener>, ?ease:Float->Float) {
-		super(starTime, duration, tweeners, ease);
+		super(startTime, duration, tweeners, ease);
 	}
 	
-	//override 
+	override public function onLeftHit(rev:Bool):Void {
+		super.onLeftHit(rev);
+	}
+	override public function onRightHit(rev:Bool):Void {
+		super.onRightHit(rev);
+	}
 }

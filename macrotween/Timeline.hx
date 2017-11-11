@@ -75,7 +75,9 @@ class Timeline extends TimelineItem {
 
 #end
 
-	public macro function tween(startTime:Expr, duration:Expr, tweeners:Expr, ?ease:Expr):Timeline {
-		return add(Tween.tween(startTime, duration, tweeners, ease));
+	public macro function tween(inst:Expr, startTime:Expr, duration:Expr, tweeners:Expr, ?ease:Expr):Expr {
+		return macro {
+			${inst}.add(Tween.tween($startTime, $duration, $tweeners, $ease));
+		};
 	}
 }
