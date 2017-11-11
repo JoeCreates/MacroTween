@@ -21,18 +21,6 @@ class Tween extends TimelineItem {
 		super(null, startTime, duration);
 		this.ease = ease;
 		this.tweeners = tweeners;
-		for (tweener in tweeners) {
-			if (tweener.implicitStart) {
-				left.add(function(rev:Bool, count:Int) {
-					if (!rev) tweener.startValue = tweener.currentValue();
-				});
-			}
-			if (tweener.implicitEnd) {
-				right.add(function(rev:Bool, count:Int) {
-					if (rev) tweener.endValue = tweener.currentValue();
-				});
-			}
-		}
 	}
 
 	override public function onUpdate(time:Float):Void {

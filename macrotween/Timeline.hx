@@ -75,7 +75,7 @@ class Timeline extends TimelineItem {
 		//}
 
 		for (boundary in intersections) {
-			boundary.dispatch(reversing, reversing ? ++boundary.rightToLeftCount : ++boundary.leftToRightCount);
+			boundary.onCrossed(reversing, reversing ? ++boundary.rightToLeftCount : ++boundary.leftToRightCount);
 		}
 		
 		for (item in items) item.stepTo(nextTime, currentTime);
@@ -114,7 +114,7 @@ class Timeline extends TimelineItem {
 			item.reset();
 		}
 
-		onReset.dispatch();
+		onReset();
 	}
 
 	public function itemTimeChanged(item:TimelineItem):Void {

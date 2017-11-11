@@ -157,25 +157,6 @@ class Ease {
 		return (t < 0.5) ? circOut(2 * t) / 2 : circIn(2 * t - 1) / 2 + 0.5;
 	}
 	
-	// Cubic
-	public static inline function cubicIn(t:Float):Float {
-		return t * t * t;
-	}
-
-	public static inline function cubicOut(t:Float):Float {
-		t -= 1;
-		return t * t * t + 1;
-	}
-
-	public static inline function cubicInOut(t:Float):Float {
-		t *= 2;
-		return (t < 1) ? 0.5 * t * t * t : 0.5 * ((t -= 2)* t * t + 2);
-	}
-
-	public static inline function cubicOutIn(t:Float):Float {
-		return (t < 0.5) ? cubicOut(2 * t) / 2 : cubicIn(2 * t - 1) / 2 + 0.5;
-	}
-	
 	// Cubic Hermite
 	public static inline function hermite(t:Float, accelTime:Float, cruiseTime:Float, decelTime:Float):Float {
 		var v:Float = 1 / (accelTime / 2 + cruiseTime + decelTime / 2);
@@ -333,6 +314,25 @@ class Ease {
 		return (t < 0.5) ? quadOut(t * 2) * 0.5 : quadIn((t * 2) - 1) * 0.5 + 0.5;
 	}
 	
+	// Cubic
+	public static inline function cubicIn(t:Float):Float {
+		return t * t * t;
+	}
+
+	public static inline function cubicOut(t:Float):Float {
+		t -= 1;
+		return t * t * t + 1;
+	}
+
+	public static inline function cubicInOut(t:Float):Float {
+		t *= 2;
+		return (t < 1) ? 0.5 * t * t * t : 0.5 * ((t -= 2)* t * t + 2);
+	}
+
+	public static inline function cubicOutIn(t:Float):Float {
+		return (t < 0.5) ? cubicOut(2 * t) / 2 : cubicIn(2 * t - 1) / 2 + 0.5;
+	}
+	
 	// Quart
 	public static inline function quartIn(t:Float):Float {
 		return t * t * t * t;
@@ -389,5 +389,4 @@ class Ease {
 	}
 	
 	public static inline function linear(t:Float):Float return t;
-	
 }

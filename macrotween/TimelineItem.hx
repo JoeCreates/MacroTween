@@ -1,7 +1,5 @@
 package macrotween;
 
-import macrotween.Signal;
-
 // TODO events (boundaries) should be queued up to happen in correct order when many are passed
 
 class Boundary {
@@ -9,19 +7,12 @@ class Boundary {
 	public var leftToRightCount:Int = 0;
 	public var rightToLeftCount:Int = 0;
 	
-	public var onCrossed:TypedSignal<Bool->Int->Void>;
+	public function onCrossed(direction:Bool, times:Int):Void {
+
+	}
 
 	public inline function new(parent:TimelineItem) {
 		this.parent = parent;
-		this.onCrossed = new TypedSignal<Bool->Int->Void>();
-	}
-
-	public function add(f:Bool->Int->Void):Void {
-		onCrossed.add(f);
-	}
-
-	public function dispatch(reverse:Bool, count:Int):Void {
-		onCrossed.dispatch(reverse, count);
 	}
 }
 
@@ -43,8 +34,13 @@ class TimelineItem {
 	public var left:Boundary;
 	public var right:Boundary;
 	
-	public var onReset(default, null):Signal = new Signal();
-	public var onRemoved = new TypedSignal<Timeline->Void>();
+	public function onReset():Void {
+		
+	}
+	
+	public function onRemoved(from:Timeline):Void {
+		
+	}
 
 	public function new(?parent:Timeline, startTime:Float, duration:Float) {
 		this.parent = parent;
@@ -70,16 +66,22 @@ class TimelineItem {
 
 	}
 
-	public function stepTo(nextTime:Float, ?currentTime:Float):Void {
+	public function stepTo(nextTime:Float):Void {
 		if (isComplete) {
 			return;
 		}
 		
-		// TODO bound handling goes in here
+		if (isTimeInBounds(currentTime)) {
+			if (currentTime == null) {
+				currentTime = nextTime;
+				
+				setImplicitStartTimes();
+				setImplicitEndTimes();
+			} else {
+				
+			}
+		}
 		
-		//if (currentTime == null) {
-			//currentTime = nextTime;//TODO
-		//}
 		//
 		//if (currentTime == startTimecurrentTime < startTime && nextTime >= startTime) {
 			//
@@ -89,6 +91,30 @@ class TimelineItem {
 		//}
 		
 		onUpdate(nextTime);
+	}
+	
+	private function setImplicitStartTimes():Void {
+		for (tweener in tweeners) {
+			if (tweener.implicitStart) {
+				
+			}
+			
+			if (tweener.implicitEnd) {
+				
+			}
+		}
+	}
+	
+	private function setImplicitEndTimes():Void {
+		for (tweener in tweeners) {
+			if (tweener.implicitStart) {
+				
+			}
+			
+			if (tweener.implicitEnd) {
+				
+			}
+		}
 	}
 	
 	public function isTimeInBounds(?time:Float):Bool {
