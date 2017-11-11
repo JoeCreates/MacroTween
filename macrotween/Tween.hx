@@ -50,14 +50,6 @@ class Tween extends TimelineItem {
 			}
 		}
 	}
-
-	public static inline function progressFraction(time:Float, start:Float, end:Float):Float {
-		if (start == end) {
-			return 0.5;
-		}
-
-		return Math.min(1, Math.max(0, (time - start) / (end - start)));
-	}
 	
 	private function setImplicitStartTimes():Void {
 		for (tweener in tweeners) {
@@ -147,7 +139,7 @@ class Tween extends TimelineItem {
 					},
 					function (_macroTween_startValue:Float, _macroTween_endValue:Float, _macroTween_tween:Tween, _macroTween_time:Float):Void {
 						var _macroTween_progress:Float =
-							Tween.progressFraction(_macroTween_time, _macroTween_tween.startTime, _macroTween_tween.endTime);
+							TimelineItem.progressFraction(_macroTween_time, _macroTween_tween.startTime, _macroTween_tween.endTime);
 						if (_macroTween_tween.ease != null) _macroTween_progress = _macroTween_tween.ease(_macroTween_progress);
 						// Sets value by interpolation
 						${combinedField} = _macroTween_startValue + _macroTween_progress * (_macroTween_endValue - _macroTween_startValue);
@@ -172,7 +164,7 @@ class Tween extends TimelineItem {
 			
 			// Makes the tweener object and adds it to array
 			tweenerObjects.push(macro {//TODO what to do with unneeded values
-				new Tweener(0, 0, false, false, 
+				new Tweener(0, 0, false, false,
 					function():Float {
 						return 0;//TODO what to do with this?
 					},

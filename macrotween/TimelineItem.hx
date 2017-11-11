@@ -66,6 +66,9 @@ class TimelineItem {
 			return;
 		}
 		
+		// TODO
+		var lastTime:Float = currentTime;
+		
 		updateBounds(nextTime);
 		
 		onUpdate(nextTime);
@@ -73,6 +76,13 @@ class TimelineItem {
 	
 	public function onUpdate(time:Float):Void {
 
+	}
+	
+	public static inline function progressFraction(time:Float, start:Float, end:Float):Float {
+		if (start == end) {
+			return 0.5;
+		}
+		return Math.min(1, Math.max(0, (time - start) / (end - start)));
 	}
 	
 	public function isTimeInBounds(time:Float):Bool {

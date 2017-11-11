@@ -14,26 +14,6 @@ class Timeline extends TimelineItem {
 		children = new List<TimelineItem>();
 		relativeDuration = 1;
 	}
-
-	/**
-	 * Steps to an absolute time on the timeline
-	 * @param	nextTime Absolute time
-	 */
-	override public function stepTo(nextTime:Float):Void {
-		super.stepTo(nextTime);
-	}
-	
-	override public function updateBounds(nextTime:Float):Void {
-		for (child in children) {
-			child.updateBounds(nextTime);
-		}
-		
-		super.updateBounds(nextTime);
-		
-		for (child in children) {
-			child.onUpdate(nextTime);
-		}
-	}
 	
 	/**
 	 * Resets all the children of the timeline
@@ -46,6 +26,10 @@ class Timeline extends TimelineItem {
 		}
 		
 		onReset();
+	}
+	
+	override public function onUpdate(time:Float):Void {
+		updateChildren(time);
 	}
 
 	public function add(child:TimelineItem):Void {
@@ -60,6 +44,17 @@ class Timeline extends TimelineItem {
 	public function clear():Void {
 		children = new List<TimelineItem>();
 	}
+	
+	private function updateChildren(nextTime:Float):Void {
+		//nextTime -= startTime;
+		// TODO
+		
+		for (child in children) {
+			child.stepTo(nextTime);
+		}
+	}
+	
+	
 	
 	private static inline function clamp(value:Float, ?min:Float, ?max:Float):Float {
 		var lowerBound:Float = (min != null && value < min) ? min : value;
