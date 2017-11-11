@@ -18,9 +18,26 @@ class Tween extends TimelineItem {
 	public var tweeners:Array<Tweener>;
 
 	public function new(startTime:Float, duration:Float, tweeners:Array<Tweener>, ?ease:Float->Float) {
-		super(null, startTime, duration);
+		super(startTime, duration);
 		this.ease = ease;
 		this.tweeners = tweeners;
+	}
+	
+	override public function onLeftHit(reversed:Bool):Void {
+		if (!reversed) {
+			setImplicitStartTimes();
+		}
+	}
+	
+	override public function onRightHit(reversed:Bool):Void {
+		if (reversed) {
+			setImplicitEndTimes();
+		}
+	}
+	
+	override public function onStartInBounds():Void {
+		setImplicitStartTimes();
+		setImplicitEndTimes();
 	}
 
 	override public function onUpdate(time:Float):Void {
@@ -40,6 +57,22 @@ class Tween extends TimelineItem {
 		}
 
 		return Math.min(1, Math.max(0, (time - start) / (end - start)));
+	}
+	
+	private function setImplicitStartTimes():Void {
+		for (tweener in tweeners) {
+			if (tweener.implicitStart) {
+				tweener.startValue = tweener.currentValue();
+			}
+		}
+	}
+	
+	private function setImplicitEndTimes():Void {
+		for (tweener in tweeners) {
+			if (tweener.implicitEnd) {
+				tweener.endValue = tweener.currentValue();
+			}
+		}
 	}
 	
 #end

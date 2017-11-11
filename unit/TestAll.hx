@@ -1,8 +1,8 @@
 package;
 
 import tests.TestEase;
-import tests.TestSignal;
 import tests.TestTimeline;
+import tests.TestTimelineItem;
 import tests.TestTween;
 import utest.Runner;
 import utest.ui.Report;
@@ -13,8 +13,8 @@ import utest.ui.Report;
 class TestAll {
 	public static function addTests(runner:Runner) {
 		runner.addCase(new TestEase());
-		runner.addCase(new TestSignal());
 		runner.addCase(new TestTimeline());
+		runner.addCase(new TestTimelineItem());
 		runner.addCase(new TestTween());
 	}
 

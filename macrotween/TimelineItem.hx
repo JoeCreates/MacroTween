@@ -1,27 +1,9 @@
 package macrotween;
 
-// TODO events (boundaries) should be queued up to happen in correct order when many are passed
-
-class Boundary {
-	public var parent(default, null):TimelineItem;
-	public var leftToRightCount:Int = 0;
-	public var rightToLeftCount:Int = 0;
-	
-	public function onCrossed(direction:Bool, times:Int):Void {
-
-	}
-
-	public inline function new(parent:TimelineItem) {
-		this.parent = parent;
-	}
-}
-
 /**
  * The TimelineItem class is the base class for any object that can go on a timeline.
  */
 class TimelineItem {
-	public var parent(default, null):Timeline;
-	
 	/** Setting this will skip boundary triggering */
 	public var currentTime:Null<Float>;
 
@@ -29,10 +11,8 @@ class TimelineItem {
 	@:isVar public var duration(get, set):Float;
 	public var endTime(get, null):Float;
 
-	public var isComplete(get, null):Bool;
-
-	public var left:Boundary;
-	public var right:Boundary;
+	private var _isInBounds:Bool;
+	private var _isInBoundsDirty:Bool;
 	
 	public function onReset():Void {
 		
@@ -41,85 +21,106 @@ class TimelineItem {
 	public function onRemoved(from:Timeline):Void {
 		
 	}
+	
+	public function onLeftHit(reversed:Bool):Void {
+		
+	}
+	
+	public function onRightHit(reversed:Bool):Void {
+		
+	}
+	
+	// If we initially stepTo within the bounds, we cannot infer
+	// what direction we came from, so call this
+	public function onStartInBounds():Void {
+		
+	}
 
-	public function new(?parent:Timeline, startTime:Float, duration:Float) {
-		this.parent = parent;
+	public function new(startTime:Float, duration:Float) {
+		_isInBounds = false;
+		_isInBoundsDirty = true;
+		
 		this.currentTime = null;
 		this.startTime = startTime;
 		this.duration = duration;
-
-		left = new Boundary(this);
-		right = new Boundary(this);
-
-		#if debug
-		onRemoved.add(function(parent:Timeline) {
-			trace("Removed timeline item from timeline");
-		});
-		#end
 	}
 
 	public function reset():Void {
 
 	}
-
-	public function onUpdate(time:Float):Void {
-
+	
+	/**
+	 * Step to a relative time on the timeline item
+	 * @param	dt Time delta
+	 */
+	public function step(dt:Float):Void {
+		stepTo(currentTime + dt);
 	}
-
+	
+	/**
+	 * Step to an absolute time on the timeline item
+	 * @param	nextTime Absolute time
+	 */
 	public function stepTo(nextTime:Float):Void {
-		if (isComplete) {
+		if (currentTime == nextTime) {
 			return;
 		}
 		
-		if (isTimeInBounds(currentTime)) {
-			if (currentTime == null) {
-				currentTime = nextTime;
-				
-				setImplicitStartTimes();
-				setImplicitEndTimes();
-			} else {
-				
-			}
-		}
-		
-		//
-		//if (currentTime == startTimecurrentTime < startTime && nextTime >= startTime) {
-			//
-		//}
-		//else if (currentTime < endTime && nextTime >= endTime) {
-			//
-		//}
+		updateBounds(nextTime);
 		
 		onUpdate(nextTime);
 	}
 	
-	private function setImplicitStartTimes():Void {
-		for (tweener in tweeners) {
-			if (tweener.implicitStart) {
-				
-			}
-			
-			if (tweener.implicitEnd) {
-				
-			}
-		}
+	public function onUpdate(time:Float):Void {
+
 	}
 	
-	private function setImplicitEndTimes():Void {
-		for (tweener in tweeners) {
-			if (tweener.implicitStart) {
-				
-			}
-			
-			if (tweener.implicitEnd) {
-				
-			}
-		}
+	public function isTimeInBounds(time:Float):Bool {
+		return time >= startTime && time <= endTime;
 	}
 	
-	public function isTimeInBounds(?time:Float):Bool {
-		var t:Float = time == null ? currentTime : time;
-		return t >= startTime && t <= endTime;
+	private function isCurrentTimeInBounds():Bool {
+		if (currentTime == null) {
+			return false;
+		}
+		if (!_isInBoundsDirty) {
+			return _isInBounds;
+		}
+		
+		_isInBounds = isTimeInBounds(currentTime);
+		_isInBoundsDirty = false;
+		
+		return _isInBounds;
+	}
+	
+	private function updateBounds(nextTime:Float):Void {
+		// First update - if we are in bounds, but don't know what direction we came from
+		if (currentTime == null) {
+			currentTime = nextTime;
+			if (isCurrentTimeInBounds()) {
+				onStartInBounds();
+			}
+		} else { // Not the first update, and we can work out what direction we came from
+			var isReversing:Bool = nextTime < currentTime;
+			
+			var lastInBounds = isCurrentTimeInBounds();
+			currentTime = nextTime;
+			var nextInBounds = isCurrentTimeInBounds();
+			
+			if (lastInBounds && !nextInBounds) {
+				if (isReversing) {
+					onLeftHit(true);
+				} else {
+					onRightHit(false);
+				}
+			} else if (!lastInBounds && nextInBounds) {
+				if (isReversing) {
+					onRightHit(true);
+				} else {
+					onLeftHit(false);
+				}
+			}
+		}
 	}
 
 	private function get_duration():Float {
@@ -127,10 +128,13 @@ class TimelineItem {
 	}
 
 	private function set_duration(duration:Float):Float {
-		this.duration = Math.max(0, duration);
-		if (parent != null) {
-			parent.itemTimeChanged(this);
+		if (this.duration == duration) {
+			return this.duration;
 		}
+		
+		_isInBoundsDirty = true;
+		
+		this.duration = Math.max(0, duration);
 		return duration;
 	}
 	
@@ -139,18 +143,17 @@ class TimelineItem {
 	}
 
 	private function set_startTime(startTime:Float):Float {
-		this.startTime = startTime;
-		if (parent != null) {
-			parent.itemTimeChanged(this);
+		if (this.startTime == startTime) {
+			return this.startTime;
 		}
+		
+		_isInBoundsDirty = true;
+		
+		this.startTime = startTime;
 		return startTime;
 	}
 
 	private function get_endTime():Float {
 		return startTime + duration;
-	}
-
-	private function get_isComplete():Bool {
-		return false;
 	}
 }
