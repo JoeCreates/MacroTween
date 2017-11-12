@@ -1,5 +1,9 @@
 package;
 
+#if lime
+import lime.app.Application;
+#end
+
 import tests.TestEase;
 import tests.TestTimeline;
 import tests.TestTimelineItem;
@@ -10,7 +14,14 @@ import utest.ui.Report;
 /**
  * Runs all of the unit tests.
  */
-class TestAll {
+class TestAll #if lime extends Application #end {
+	#if lime
+	public function new() {
+		super();
+		main();
+	}
+	#end
+	
 	public static function addTests(runner:Runner) {
 		runner.addCase(new TestEase());
 		runner.addCase(new TestTimeline());

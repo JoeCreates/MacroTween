@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project>
+	<app title="MacroTweenUnitTests" file="MacroTweenUnitTests" main="TestAll" version="1.0.0" />
+	
+	<set name="BUILD_DIR" value="export" />
+	
+	<haxelib name="lime" />
+	<haxelib name="MacroTween" />
+	<haxelib name="utest" />
+</project>
