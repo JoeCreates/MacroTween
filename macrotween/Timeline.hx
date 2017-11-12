@@ -22,10 +22,10 @@ class Timeline extends TimelineItem {
 	private var children:List<TimelineItem>;
 	public var relativeDuration:Float;
 
-	public function new(startTime:Float = 0, duration:Float = 1) {
+	public function new(startTime:Float = 0, duration:Float = 1, relativeDuration:Float = 1) {
 		super(startTime, duration);
-		children = new List<TimelineItem>();
-		relativeDuration = 1;
+		this.relativeDuration = relativeDuration;
+		this.children = new List<TimelineItem>();
 	}
 	
 	/**
