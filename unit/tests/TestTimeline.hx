@@ -40,7 +40,7 @@ class TestTimeline {
 	}
 	
 	public function testCallbackOrders():Void {
-		var tl = new Timeline();
+		var tl = new Timeline(0, 1, 1);
 		
 		var cbt1:CallbackTween = Tween.tween(0.1, 0.6, a.a => 0...100, null, {pack: ["tests"], name: "CallbackTween"});
 		var cbt2:CallbackTween = Tween.tween(0.2, 0.7, a.b => 100...200, null, {pack: ["tests"], name: "CallbackTween"});
@@ -64,13 +64,38 @@ class TestTimeline {
 		Assert.isTrue(str == expectedStr, (str == expectedStr ? "" : ("Expected: " + expectedStr + ", Actual: " + str)));
 	}
 	
+	public function testCallbackOrdersAndBounds():Void {
+		var tl = new Timeline(0, 1, 1);
+		
+		var cbt1:CallbackTween = Tween.tween(0.0, 0.6, a.a => 0...100, null, {pack: ["tests"], name: "CallbackTween"});
+		var cbt2:CallbackTween = Tween.tween(0.2, 0.8, a.b => 100...200, null, {pack: ["tests"], name: "CallbackTween"});
+		
+		var str:String = "";
+		
+		cbt1.leftHit = function(rev) {str += "1L" + (rev ? "r" : ""); };
+		cbt1.rightHit = function(rev) {str += "1R" + (rev ? "r" : ""); };
+		cbt2.leftHit = function(rev) {str += "2L" + (rev ? "r" : ""); };
+		cbt2.rightHit = function(rev) {str += "2R" + (rev ? "r" : ""); };
+		
+		tl.add(cbt1).add(cbt2);
+		Assert.isTrue(tl.length == 2);
+		tl.stepTo(0);
+		tl.stepTo(1);
+		Assert.isTrue(a.b == 200);
+		tl.stepTo(0);
+		var expectedStr = "1L2L1R2R1Rr2Lr1Lr";
+		
+		Assert.isTrue(a.b == 100);
+		Assert.isTrue(str == expectedStr, (str == expectedStr ? "" : ("Expected: " + expectedStr + ", Actual: " + str)));
+	}
+	
 	public function testChaining():Void {
 		var tl:Timeline = new Timeline();
 		tl.tween(0, 1, b => 10).tween(0, 1, a.a => 20).stepTo(1);
 		Assert.isTrue(a.a == 20 && b == 10);
 	}
 	
-		public function testSimpleRelativeDuration():Void {
+	public function testSimpleRelativeDuration():Void {
 		var tl:Timeline = new Timeline(0, 1, 2);
 		tl.tween(0, 1, b => 10).stepTo(1);
 		

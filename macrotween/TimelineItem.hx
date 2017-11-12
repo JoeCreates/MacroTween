@@ -133,26 +133,37 @@ class TimelineItem {
 	
 	private function updateBounds(lastTime:Null<Float>):Void {
 		// First update - if we are in bounds, but don't know what direction we came from
-		if (lastTime == null && isCurrentTimeInBounds() && currentTime != startTime && currentTime != endTime) {
+		var currentTimeInBounds = isCurrentTimeInBounds();
+		if (lastTime == null && !currentTimeInBounds) {
+			return;
+		} else if (lastTime == null && currentTimeInBounds && currentTime != startTime && currentTime != endTime) {
 			onStartInBounds();
 		} else { // Not the first update, and we can work out what direction we came from
-			var isReversing:Bool = lastTime != null && currentTime < lastTime;
 			
-			var lastInBounds = lastTime != null && isTimeInBounds(lastTime);//TODO use cache
-			var currentInBounds = isCurrentTimeInBounds();
-			
-			if (lastInBounds && !currentInBounds) {
-				if (isReversing) {
-					onLeftHit(true);
-				} else {
-					onRightHit(false);
-				}
-			} else if (!lastInBounds && currentInBounds) {
-				if (isReversing) {
-					onRightHit(true);
-				} else {
+			if (lastTime == null) {
+				if (currentTime == startTime) {
 					onLeftHit(false);
 				}
+				if (currentTime == endTime) {
+					onRightHit(true);
+				}
+				return;
+			}
+			
+			if (currentTime >= startTime && lastTime < startTime) {
+				onLeftHit(false);
+			}
+			
+			if (currentTime >= endTime && lastTime < endTime) {
+				onRightHit(false);
+			}
+			
+			if (currentTime <= startTime && lastTime > startTime) {
+				onLeftHit(true);
+			}
+			
+			if (currentTime <= endTime && lastTime > endTime) {
+				onRightHit(true);
 			}
 		}
 	}

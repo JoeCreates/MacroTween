@@ -1,6 +1,7 @@
 package tests;
 
 import macrotween.Tween;
+import tests.TestTimeline.CallbackTween;
 import utest.Assert;
 
 abstract HelperAbstractFloat(Float) to Float from Float {
@@ -210,5 +211,25 @@ class TestTween {
 		
 		tween.stepTo(1.0);
 		Assert.isTrue(x == 100);
+	}
+	
+	public function testTweenCallbacks() {
+		var x:Float = 50;
+		
+		var cbt1:CallbackTween = Tween.tween(0.0, 1.0, x => 0...100, null, {pack: ["tests"], name: "CallbackTween"});
+		
+		var str:String = "";
+		
+		cbt1.leftHit = function(rev) {str += "1L" + (rev ? "r" : ""); };
+		cbt1.rightHit = function(rev) {str += "1R" + (rev ? "r" : ""); };
+		
+		cbt1.stepTo(0);
+		cbt1.stepTo(1);
+		Assert.isTrue(x == 100);
+		cbt1.stepTo(0);
+		var expectedStr = "1L1R1Lr";
+		
+		Assert.isTrue(x == 0);
+		Assert.isTrue(str == expectedStr, (str == expectedStr ? "" : ("Expected: " + expectedStr + ", Actual: " + str)));
 	}
 }
