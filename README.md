@@ -37,3 +37,6 @@ Tween.tween(0, 1, myObject.x => 10..._);
 Tween.tween(0, 1, myFunc(10...20));
 
 ```
+
+# Notes
+ * Read the documentation [here](https://joecreates.github.io/MacroTween/macrotween/index.html).

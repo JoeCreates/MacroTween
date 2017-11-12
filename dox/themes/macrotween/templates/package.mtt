@@ -1,7 +1,7 @@
 ::use 'main.mtt'::
 
 <h1>MacroTween API documentation <small ::cond api.isDefined("version")::>version ::api.getValue('version')::</small></h1>
-<p>MacroTween offers concise tweening without reflection, providing unrivalled performance and ease of use.</p> 
+<p>MacroTween offers concise tweening syntax using Haxe macros, with a focus on ease of use.</p> 
 <h3>Getting Started With MacroTween</h3>
 <ul>
 	<li>Take a look at the readme in the <a href="https://github.com/JoeCreates/MacroTween">code repository</a></li>
