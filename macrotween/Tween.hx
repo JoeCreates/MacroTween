@@ -67,8 +67,8 @@ class Tween extends TimelineItem {
 	}
 	
 #end
-	
-	public static macro function tween(startTime:Expr, duration:Expr, tweeners:Expr, ?ease:Expr):Expr {
+
+	public static macro function tween(startTime:Expr, duration:Expr, tweeners:Expr, ?ease:Expr, ?tweenType:TypePath):Expr {
 		var tweenerObjects:Array<Expr> = [];
 		
 		var p = new Printer();
@@ -203,9 +203,10 @@ class Tween extends TimelineItem {
 		handleExpr(null, tweeners);
 		
 		if (ease == null) ease = macro null;
+		if (tweenType == null) tweenType = {pack: ["macrotween"], name: "Tween"};
 		
 		// Return the new Tween object
-		return macro {new Tween(${startTime}, ${duration}, $a{tweenerObjects}, ${ease});};
+		return macro {new $tweenType(${startTime}, ${duration}, $a{tweenerObjects}, ${ease});};
 	}
 	
 }
