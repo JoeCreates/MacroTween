@@ -9,7 +9,7 @@ class TimelineItem {
 
 	@:isVar public var startTime(get, set):Float;
 	@:isVar public var duration(get, set):Float;
-	public var endTime(get, null):Float;
+	public var endTime(get, never):Float;
 
 	private var _isInBounds:Bool;
 	private var _isInBoundsDirty:Bool;
@@ -65,22 +65,35 @@ class TimelineItem {
 		if (lastTime == null) lastTime = currentTime;
 		if (lastTime == time) return;
 		
-		var leftHit:Bool = lastTime != null &&
+		var leftCrossed:Bool = lastTime != null &&
 			((lastTime < startTime && time > startTime) || (lastTime > startTime && time < startTime));
-		var rightHit:Bool = lastTime != null &&
+		var rightCrossed:Bool = lastTime != null &&
 			((lastTime < endTime && time > endTime) || (lastTime > endTime && time < endTime));
 		var rev:Bool = lastTime != null && lastTime > time;
 		
 		
-		if (leftHit || rightHit) {
+		if (leftCrossed || rightCrossed) {
+			var cTime:Float = lastTime;
 			if (rev) {
-				if (rightHit) stepTo(endTime);
-				if (leftHit) stepTo(startTime);
-				if (time != startTime) stepTo(time);
+				if (rightCrossed) {
+					stepTo(endTime, cTime);
+					cTime = endTime;
+				}
+				if (leftCrossed) {
+					stepTo(startTime, cTime);
+					cTime = startTime;
+				}
+				if (time != startTime) stepTo(time, cTime);
 			} else {
-				if (leftHit) stepTo(startTime);
-				if (rightHit) stepTo(endTime);
-				if (time != endTime) stepTo(time);
+				if (leftCrossed) {
+					stepTo(startTime, cTime);
+					cTime = startTime;
+				}
+				if (rightCrossed) {
+					stepTo(endTime, cTime);
+					cTime = endTime;
+				}
+				if (time != endTime) stepTo(time, cTime);
 			}
 		} else {
 			currentTime = time;
@@ -120,14 +133,12 @@ class TimelineItem {
 	
 	private function updateBounds(lastTime:Null<Float>):Void {
 		// First update - if we are in bounds, but don't know what direction we came from
-		if (lastTime == null) {
-			if (isCurrentTimeInBounds()) {
-				onStartInBounds();
-			}
+		if (lastTime == null && isCurrentTimeInBounds() && currentTime != startTime && currentTime != endTime) {
+			onStartInBounds();
 		} else { // Not the first update, and we can work out what direction we came from
-			var isReversing:Bool = currentTime < lastTime;
+			var isReversing:Bool = lastTime != null && currentTime < lastTime;
 			
-			var lastInBounds = isTimeInBounds(lastTime);//TODO use cache
+			var lastInBounds = lastTime != null && isTimeInBounds(lastTime);//TODO use cache
 			var currentInBounds = isCurrentTimeInBounds();
 			
 			if (lastInBounds && !currentInBounds) {

@@ -16,18 +16,18 @@
   <!-- Other classes to be compiled into your SWF -->
   <classpaths>
     <class path="C:\HaxeToolkit\haxe\lib\lime\2,9,1" />
-    <class path="C:\HaxeToolkit\haxe\lib\MacroTween\git" />
+    <class path="C:\Users\Joe\Documents\HaxeDev\MacroTween" />
     <class path="C:\HaxeToolkit\haxe\lib\utest\1,7,0\src" />
-    <class path="export\windows\neko\haxe" />
+    <class path="export\flash\haxe" />
   </classpaths>
   <!-- Build options -->
   <build>
-    <option directives="lime=2.9.1&#xA;MacroTween=1.0.0&#xA;utest=1.7.0&#xA;tools=2.9.1&#xA;no-compilation&#xA;lime-native&#xA;windows&#xA;desktop&#xA;display" />
+    <option directives="lime=2.9.1&#xA;MacroTween=1.0.0&#xA;utest=1.7.0&#xA;tools=2.9.1&#xA;no-compilation&#xA;web&#xA;display" />
     <option flashStrict="False" />
     <option noInlineOnDebug="False" />
     <option mainClass="ApplicationMain" />
     <option enabledebug="False" />
-    <option additional="#--macro keep(&quot;TestAll&quot;)" />
+    <option additional="-swf-version 11.2&#xA;-debug " />
   </build>
   <!-- haxelib libraries -->
   <haxelib>
