@@ -41,7 +41,9 @@ class Tween extends TimelineItem {
 		setImplicitEndTimes();
 	}
 
-	override public function onUpdate(time:Float):Void {
+	override public function onUpdate(time:Float, ?lastTime:Float):Void {
+		super.onUpdate(time, lastTime);
+		
 		if (isTimeInBounds(time)) {
 			for (i in 0...tweeners.length) {
 				var tweener = tweeners[i];

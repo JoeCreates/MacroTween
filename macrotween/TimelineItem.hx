@@ -5,8 +5,8 @@ package macrotween;
  */
 class TimelineItem {
 	/** Setting this will skip boundary triggering */
-	public var currentTime:Null<Float>;
-
+	public var currentTime(default, set):Null<Float>;
+	
 	@:isVar public var startTime(get, set):Float;
 	@:isVar public var duration(get, set):Float;
 	public var endTime(get, never):Float;
@@ -61,7 +61,7 @@ class TimelineItem {
 	 * Step to an absolute time on the timeline item
 	 * @param	nextTime Absolute time
 	 */
-	public function stepTo(time:Float, ?lastTime):Void {
+	public function stepTo(time:Float, ?lastTime:Float):Void {
 		if (lastTime == null) lastTime = currentTime;
 		if (lastTime == time) return;
 		
@@ -70,7 +70,6 @@ class TimelineItem {
 		var rightCrossed:Bool = lastTime != null &&
 			((lastTime < endTime && time > endTime) || (lastTime > endTime && time < endTime));
 		var rev:Bool = lastTime != null && lastTime > time;
-		
 		
 		if (leftCrossed || rightCrossed) {
 			var cTime:Float = lastTime;
@@ -98,11 +97,12 @@ class TimelineItem {
 		} else {
 			currentTime = time;
 			updateBounds(lastTime);
-			onUpdate(time);
+			
+			onUpdate(time, lastTime);
 		}
 	}
 	
-	public function onUpdate(time:Float):Void {
+	public function onUpdate(time:Float, ?lastTime:Float):Void {
 
 	}
 	
@@ -155,6 +155,11 @@ class TimelineItem {
 				}
 			}
 		}
+	}
+	
+	private function set_currentTime(time:Null<Float>):Null<Float> {
+		_isInBoundsDirty = true;
+		return this.currentTime = time;
 	}
 
 	private function get_duration():Float {

@@ -43,9 +43,9 @@ class Timeline extends TimelineItem {
 		onReset();
 	}
 	
-	override public function onUpdate(time:Float):Void {
-		super.onUpdate(time);
-		updateChildren(time);
+	override public function onUpdate(time:Float, ?lastTime:Float):Void {
+		super.onUpdate(time, lastTime);
+		updateChildren(time, lastTime);
 	}
 
 	public function add(child:TimelineItem):Timeline {
@@ -63,11 +63,59 @@ class Timeline extends TimelineItem {
 		children.splice(0, children.length);
 	}
 	
-	private function updateChildren(nextTime:Float):Void {
-		nextTime = (nextTime - startTime) * relativeDuration / duration;
+	private function updateChildren(time:Float, ?lastTime:Float):Void {
+		var relativeTime:Float = (time - startTime) * relativeDuration / duration;
 		
+		if (lastTime == null) {
+			for (child in children) {
+				child.stepTo(time);
+			}
+			return;
+		}
+		
+		var relativeLast:Float = (lastTime - startTime) * relativeDuration / duration;
+		
+		var times:Array<Float> = [ relativeTime ];
 		for (child in children) {
-			child.stepTo(nextTime);
+			if (time < lastTime) {
+				if (child.startTime <= relativeLast && child.startTime >= relativeTime) {
+					times.push(child.startTime);
+				}
+				if (child.endTime <= relativeLast && child.endTime >= relativeTime) {
+					times.push(child.endTime);
+				}
+			} else {
+				if (child.startTime >= relativeLast && child.startTime <= relativeTime) {
+					times.push(child.startTime);
+				}
+				if (child.endTime >= relativeLast && child.endTime <= relativeTime) {
+					times.push(child.endTime);
+				}
+			}
+		}
+		
+		if (time < lastTime) {
+			times.sort(function(a:Float, b:Float):Int {
+				if (a < b) return 1;
+				else if (a > b) return -1;
+				return 0;
+			});
+		} else {
+			times.sort(function(a:Float, b:Float):Int {
+				if (a < b) return -1;
+				else if (a > b) return 1;
+				return 0;
+			});
+		}
+		
+		for (time in times) {
+			if (relativeLast == time) {
+				continue;
+			}
+			for (child in children) {
+				child.stepTo(time);
+			}
+			relativeLast = time;
 		}
 	}
 	

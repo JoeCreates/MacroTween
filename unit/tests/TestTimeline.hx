@@ -45,8 +45,6 @@ class TestTimeline {
 		var cbt1:CallbackTween = Tween.tween(0.1, 0.6, a.a => 0...100, null, {pack: ["tests"], name: "CallbackTween"});
 		var cbt2:CallbackTween = Tween.tween(0.2, 0.7, a.b => 100...200, null, {pack: ["tests"], name: "CallbackTween"});
 		
-		trace(cbt1);
-		
 		var str:String = "";
 		
 		cbt1.leftHit = function(rev) {str += "1L" + (rev ? "r" : ""); };
@@ -77,7 +75,6 @@ class TestTimeline {
 		tl.tween(0, 1, b => 10).stepTo(1);
 		
 		tl.stepTo(1);
-		trace(b); // TODO
 	}
 	
 	public function testMultipleTimelines():Void {
@@ -100,20 +97,17 @@ class TestTimeline {
 	}
 	
 	public function testTweensOrdering():Void {
-		var tl:Timeline = new Timeline(0, 10);
+		var tl:Timeline = new Timeline(0, 10, 10);
 		
 		tl.tween(0, 1, b => 0...100);
-		tl.tween(2, 3, b => 2000...3000);
-		tl.tween(4, 5, b => 50000...60000);
+		tl.tween(2, 1, b => 2000...3000);
+		tl.tween(4, 1, b => 50000...60000);
 		
 		tl.stepTo(0.5);
-		trace(b); // TODO
 		Assert.isTrue(b == 50);
 		tl.stepTo(2.5);
-		trace(b); // TODO
 		Assert.isTrue(b == 2500);
 		tl.stepTo(4.5);
-		trace(b); // TODO
 		Assert.isTrue(b == 55000);
 	}
 }
