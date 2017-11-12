@@ -19,13 +19,15 @@ import haxe.macro.Context;
 class Timeline {
 #else
 class Timeline extends TimelineItem {
-	private var children:List<TimelineItem>;
 	public var relativeDuration:Float;
+	public var length(get, never):Int;
+	
+	private var children:Array<TimelineItem>;
 
 	public function new(startTime:Float = 0, duration:Float = 1, relativeDuration:Float = 1) {
 		super(startTime, duration);
 		this.relativeDuration = relativeDuration;
-		this.children = new List<TimelineItem>();
+		this.children = new Array<TimelineItem>();
 	}
 	
 	/**
@@ -42,11 +44,12 @@ class Timeline extends TimelineItem {
 	}
 	
 	override public function onUpdate(time:Float):Void {
+		super.onUpdate(time);
 		updateChildren(time);
 	}
 
 	public function add(child:TimelineItem):Timeline {
-		children.add(child);
+		children.push(child);
 		return this;
 	}
 
@@ -57,7 +60,7 @@ class Timeline extends TimelineItem {
 	}
 
 	public function clear():Void {
-		children = new List<TimelineItem>();
+		children.splice(0, children.length);
 	}
 	
 	private function updateChildren(nextTime:Float):Void {
@@ -66,6 +69,10 @@ class Timeline extends TimelineItem {
 		for (child in children) {
 			child.stepTo(nextTime);
 		}
+	}
+	
+	private function get_length():Int {
+		return children.length;
 	}
 	
 	private static inline function clamp(value:Float, ?min:Float, ?max:Float):Float {

@@ -61,19 +61,16 @@ class TimelineItem {
 	 * Step to an absolute time on the timeline item
 	 * @param	nextTime Absolute time
 	 */
-	public function stepTo(time:Float):Void {
-		if (currentTime == time) {
-			return;
-		}
-		
-		// TODO
-		var lastTime:Null<Float> = currentTime;
+	public function stepTo(time:Float, ?lastTime):Void {
+		if (lastTime == null) lastTime = currentTime;
+		if (lastTime == time) return;
 		
 		var leftHit:Bool = lastTime != null &&
-			((lastTime < startTime && currentTime >= startTime) || (lastTime > startTime && currentTime <= startTime));
+			((lastTime < startTime && time > startTime) || (lastTime > startTime && time < startTime));
 		var rightHit:Bool = lastTime != null &&
-			((lastTime < endTime && currentTime >= endTime) || (lastTime > endTime && currentTime <= endTime));
+			((lastTime < endTime && time > endTime) || (lastTime > endTime && time < endTime));
 		var rev:Bool = lastTime != null && lastTime > time;
+		
 		
 		if (leftHit || rightHit) {
 			if (rev) {
@@ -82,11 +79,12 @@ class TimelineItem {
 				if (time != startTime) stepTo(time);
 			} else {
 				if (leftHit) stepTo(startTime);
-				if (rightHit) stepTo(endTime);	
-				if (time != endTime) stepTo(time);		
+				if (rightHit) stepTo(endTime);
+				if (time != endTime) stepTo(time);
 			}
 		} else {
-			updateBounds(time);
+			currentTime = time;
+			updateBounds(lastTime);
 			onUpdate(time);
 		}
 	}
@@ -120,27 +118,25 @@ class TimelineItem {
 		return _isInBounds;
 	}
 	
-	private function updateBounds(nextTime:Float):Void {
+	private function updateBounds(lastTime:Null<Float>):Void {
 		// First update - if we are in bounds, but don't know what direction we came from
-		if (currentTime == null) {
-			currentTime = nextTime;
+		if (lastTime == null) {
 			if (isCurrentTimeInBounds()) {
 				onStartInBounds();
 			}
 		} else { // Not the first update, and we can work out what direction we came from
-			var isReversing:Bool = nextTime < currentTime;
+			var isReversing:Bool = currentTime < lastTime;
 			
-			var lastInBounds = isCurrentTimeInBounds();
-			currentTime = nextTime;
-			var nextInBounds = isCurrentTimeInBounds();
+			var lastInBounds = isTimeInBounds(lastTime);//TODO use cache
+			var currentInBounds = isCurrentTimeInBounds();
 			
-			if (lastInBounds && !nextInBounds) {
+			if (lastInBounds && !currentInBounds) {
 				if (isReversing) {
 					onLeftHit(true);
 				} else {
 					onRightHit(false);
 				}
-			} else if (!lastInBounds && nextInBounds) {
+			} else if (!lastInBounds && currentInBounds) {
 				if (isReversing) {
 					onRightHit(true);
 				} else {
