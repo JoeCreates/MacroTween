@@ -1,35 +1,8 @@
 package tests;
 
 import macrotween.Tween;
-import tests.TestTimeline.CallbackTween;
+import tests.HelperObjects;
 import utest.Assert;
-
-abstract HelperAbstractFloat(Float) to Float from Float {
-	inline public function new(f:Float) {
-		this = f;
-	}
-}
-
-class HelperObject {
-	public function new() {
-	}
-	public var floatValue:Float = 0;
-	public var nullableFloatValue:Null<Float> = 0;
-	public var integerValue:Int = 0;
-	
-	public var floatProperty(default, set):Float = 0;
-	public function set_floatProperty(f:Float):Float {
-		return this.floatProperty = f;
-	}
-	
-	public var unaryFunction = function(x:Float) {};
-	public var unaryFunctionWithOptionalParam = function(?x:Null<Float>) {};
-	public var unaryFunctionWithDefaultParam = function(x:Float = 0) {};
-	
-	static public var staticFunction = function(x:Float, y:Float) {};
-	static public var staticFunctionWithOptionalParams = function(?x:Null<Float>, ?y:Null<Float>) {};
-	static public var staticFunctionWithDefaultParams = function(x:Float = 0, y:Float = 0) {};
-}
 
 /**
  * Tests the Tween class.
@@ -161,6 +134,9 @@ class TestTween {
 		var myObject:{ x:Float } = { x: 0 };
 		
 		var tween:Tween = Tween.tween(0, 1, [myObject.x => 10..._], linear);
+		
+		tween.stepTo(0.5);
+		Assert.isTrue(myObject.x == 5);
 	}
 	
 	public function testFunctionTween() {
@@ -174,10 +150,6 @@ class TestTween {
 		Assert.isTrue(x == 0);
 		tween.stepTo(0.5);
 		Assert.isTrue(x == 25);
-	}
-	
-	public function testStaticFunctionTween() {
-		var tween:Tween = Tween.tween(0, 1, [HelperObject.staticFunctionWithDefaultParams(10...20, 10)], linear);
 	}
 	
 	public function testPotentialKeywordConflicts() {

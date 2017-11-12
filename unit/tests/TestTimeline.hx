@@ -1,5 +1,6 @@
 package tests;
 
+import tests.HelperObjects;
 import macrotween.Timeline;
 import macrotween.Tween;
 import macrotween.TimelineItem;
@@ -9,11 +10,8 @@ import utest.Assert;
  * Tests the Timeline class.
  */
 class TestTimeline {
-	var tl:Timeline;
-	var a:{a:Float, b:Float};
-	public var b:Float;
-	
-	function linear(x:Float) { return x; }
+	private var a:{a:Float, b:Float};
+	private var b:Float;
 	
 	public function new() {}
 	
@@ -97,9 +95,15 @@ class TestTimeline {
 	
 	public function testSimpleRelativeDuration():Void {
 		var tl:Timeline = new Timeline(0, 1, 2);
-		tl.tween(0, 1, b => 10).stepTo(1);
+		tl.tween(0, 1, b => 10).stepTo(0.5);
 		
-		tl.stepTo(1);
+		// TODO is this broken?
+		Assert.isTrue(b == 7.5);
+	}
+	
+	public function testNestedTimelines():Void {
+		// TODO
+		Assert.isTrue(true);
 	}
 	
 	public function testMultipleTimelines():Void {
@@ -119,6 +123,8 @@ class TestTimeline {
 		b = 500;
 		tl2.stepTo(1);
 		Assert.isTrue(b == 500);
+		
+		// TODO moving tweens between timelines without breaking stuff?
 	}
 	
 	public function testTweensOrdering():Void {
@@ -134,23 +140,5 @@ class TestTimeline {
 		Assert.isTrue(b == 2500);
 		tl.stepTo(4.5);
 		Assert.isTrue(b == 55000);
-	}
-}
-
-class CallbackTween extends Tween {
-	public var leftHit:Bool->Void;
-	public var rightHit:Bool->Void;
-	
-	public function new(startTime:Float, duration:Float, tweeners:Array<Tweener>, ?ease:Float->Float) {
-		super(startTime, duration, tweeners, ease);
-	}
-	
-	override public function onLeftHit(rev:Bool):Void {
-		super.onLeftHit(rev);
-		if (leftHit != null) leftHit(rev);
-	}
-	override public function onRightHit(rev:Bool):Void {
-		super.onRightHit(rev);
-		if (rightHit != null) rightHit(rev);
 	}
 }
