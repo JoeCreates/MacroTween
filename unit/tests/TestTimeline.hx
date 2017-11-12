@@ -45,6 +45,8 @@ class TestTimeline {
 		var cbt1:CallbackTween = Tween.tween(0.1, 0.6, a.a => 0...100, null, {pack: ["tests"], name: "CallbackTween"});
 		var cbt2:CallbackTween = Tween.tween(0.2, 0.7, a.b => 100...200, null, {pack: ["tests"], name: "CallbackTween"});
 		
+		trace(cbt1);
+		
 		var str:String = "";
 		
 		cbt1.leftHit = function(rev) {str += "1L" + (rev ? "r" : ""); };
@@ -53,10 +55,15 @@ class TestTimeline {
 		cbt2.rightHit = function(rev) {str += "2R" + (rev ? "r" : ""); };
 		
 		tl.add(cbt1).add(cbt2);
+		Assert.isTrue(tl.length == 2);
 		tl.stepTo(0);
 		tl.stepTo(1);
-		tl.stepTo(0);
-		Assert.isTrue(str == "1L2L1R2R2Rr1Rr2Lr1Lr");
+		Assert.isTrue(a.b == 200);
+		tl.stepTo(0.05);
+		var expectedStr = "1L2L1R2R2Rr1Rr2Lr1Lr";
+		
+		Assert.isTrue(a.b == 100);
+		Assert.isTrue(str == expectedStr, (str == expectedStr ? "" : ("Expected: " + expectedStr + ", Actual: " + str)));
 	}
 	
 	public function testChaining():Void {
