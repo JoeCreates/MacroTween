@@ -1,11 +1,5 @@
 package macrotween;
 
-/**
- * The Timeline class helps organize multiple timeline items, such as Tweens,
- * allowing them to be managed and manipulated as a group.
- * Timelines are themselves timeline items, and so can be nested within each other.
- */
-
  #if macro
 import haxe.macro.ExprTools;
 import haxe.macro.Printer;
@@ -18,6 +12,11 @@ import haxe.macro.Context;
 #if macro
 class Timeline {
 #else
+/**
+ * The Timeline class helps organize multiple timeline items, such as Tweens,
+ * allowing them to be managed and manipulated as a group.
+ * Timelines are themselves timeline items, and so can be nested within each other.
+ */
 class Timeline extends TimelineItem {
 	public var relativeDuration:Float;
 	public var length(get, never):Int;

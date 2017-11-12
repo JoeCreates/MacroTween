@@ -3,7 +3,7 @@
 	"url": "https://github.com/JoeCreates/MacroTween",
 	"license": "MIT",
 	"tags": ["cross","haxe","utility","game","tool"],
-	"description": "MacroTween is an efficient tween library that uses Haxe macros, for concise syntax and no reflection.",
+	"description": "MacroTween is a tween library that uses Haxe macros, for concise syntax.",
 	"version": "1.0.0",
 	"releasenote": "Initial release",
 	"contributors": ["joecreates,samcodes"]

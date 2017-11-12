@@ -113,7 +113,7 @@ class TimelineItem {
 		return Math.min(1, Math.max(0, (time - start) / (end - start)));
 	}
 	
-	public function isTimeInBounds(time:Float):Bool {
+	private function isTimeInBounds(time:Float):Bool {
 		return time >= startTime && time <= endTime;
 	}
 	
