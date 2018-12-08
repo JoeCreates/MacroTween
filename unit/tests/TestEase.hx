@@ -2,11 +2,12 @@ package tests;
 
 import macrotween.Ease;
 import utest.Assert;
+import utest.ITest;
 
 /**
  * Tests the Easing class.
  */
-class TestEase {
+class TestEase implements ITest {
 	public function new() {
 		
 	}

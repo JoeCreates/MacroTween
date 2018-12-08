@@ -5,11 +5,12 @@ import macrotween.Timeline;
 import macrotween.Tween;
 import macrotween.TimelineItem;
 import utest.Assert;
+import utest.ITest;
 
 /**
  * Tests the Timeline class.
  */
-class TestTimeline {
+class TestTimeline implements ITest {
 	private var a:{a:Float, b:Float};
 	private var b:Float;
 	
@@ -24,7 +25,7 @@ class TestTimeline {
 		var tl = new Timeline();
 		
 		tl.tween(0, 1, b => 10);
-		tl.stepTo(0.5);
+		tl.stepTo(0.5, null, true);
 		Assert.isTrue(b == 7.5);
 	}
 	
@@ -32,8 +33,8 @@ class TestTimeline {
 		var tl = new Timeline();
 		
 		tl.tween(0, 1, b => 10);
-		tl.stepTo(0);
-		tl.stepTo(2);
+		tl.stepTo(0, null, true);
+		tl.stepTo(2, null, true);
 		Assert.isTrue(b == 10);
 	}
 	
@@ -52,10 +53,10 @@ class TestTimeline {
 		
 		tl.add(cbt1).add(cbt2);
 		Assert.isTrue(tl.length == 2);
-		tl.stepTo(0);
-		tl.stepTo(1);
+		tl.stepTo(0, null, true);
+		tl.stepTo(1, null, true);
 		Assert.isTrue(a.b == 200);
-		tl.stepTo(0.05);
+		tl.stepTo(0.05, null, true);
 		var expectedStr = "1L2L1R2R2Rr1Rr2Lr1Lr";
 		
 		Assert.isTrue(a.b == 100);
@@ -77,10 +78,10 @@ class TestTimeline {
 		
 		tl.add(cbt1).add(cbt2);
 		Assert.isTrue(tl.length == 2);
-		tl.stepTo(0);
-		tl.stepTo(1);
+		tl.stepTo(0, null, true);
+		tl.stepTo(1, null, true);
 		Assert.isTrue(a.b == 200);
-		tl.stepTo(0);
+		tl.stepTo(0, null, true);
 		var expectedStr = "1L2L1R2R1Rr2Lr1Lr";
 		
 		Assert.isTrue(a.b == 100);
@@ -89,13 +90,13 @@ class TestTimeline {
 	
 	public function testChaining():Void {
 		var tl:Timeline = new Timeline();
-		tl.tween(0, 1, b => 10).tween(0, 1, a.a => 20).stepTo(1);
+		tl.tween(0, 1, b => 10).tween(0, 1, a.a => 20).stepTo(1, null, true);
 		Assert.isTrue(a.a == 20 && b == 10);
 	}
 	
 	public function testSimpleRelativeDuration():Void {
 		var tl:Timeline = new Timeline(0, 1, 2);
-		tl.tween(0, 1, b => 10).stepTo(0.5);
+		tl.tween(0, 1, b => 10).stepTo(0.5, null, true);
 		
 		// TODO is this broken?
 		Assert.isTrue(b == 7.5);
@@ -115,13 +116,13 @@ class TestTimeline {
 		tl2.add(tween);
 		
 		// Tween is new, so can be stepped to 0
-		tl.stepTo(1);
+		tl.stepTo(1, null, true);
 		Assert.isTrue(b == 0);
 		
 		// Tween was already stepped to 1 on the other timeline
 		// So this will not change anything
 		b = 500;
-		tl2.stepTo(1);
+		tl2.stepTo(1, null, true);
 		Assert.isTrue(b == 500);
 		
 		// TODO moving tweens between timelines without breaking stuff?
@@ -134,11 +135,11 @@ class TestTimeline {
 		tl.tween(2, 1, b => 2000...3000);
 		tl.tween(4, 1, b => 50000...60000);
 		
-		tl.stepTo(0.5);
+		tl.stepTo(0.5, null, true);
 		Assert.isTrue(b == 50);
-		tl.stepTo(2.5);
+		tl.stepTo(2.5, null, true);
 		Assert.isTrue(b == 2500);
-		tl.stepTo(4.5);
+		tl.stepTo(4.5, null, true);
 		Assert.isTrue(b == 55000);
 	}
 }

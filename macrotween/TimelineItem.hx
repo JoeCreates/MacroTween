@@ -70,7 +70,7 @@ class TimelineItem {
 		
 		if (!substep) {
 			currentTime = time;
-			onUpdate(time, lastTime);
+			onUpdate(time, lastTime, substep);
 			updateBounds(lastTime);
 		} else {
 		
@@ -85,35 +85,35 @@ class TimelineItem {
 				var cTime:Float = lastTime;
 				if (rev) {
 					if (rightCrossed) {
-						stepTo(endTime, cTime);
+						stepTo(endTime, cTime, substep);
 						cTime = endTime;
 					}
 					if (leftCrossed) {
-						stepTo(startTime, cTime);
+						stepTo(startTime, cTime, substep);
 						cTime = startTime;
 					}
-					if (time != startTime) stepTo(time, cTime);
+					if (time != startTime) stepTo(time, cTime, substep);
 				} else {
 					if (leftCrossed) {
-						stepTo(startTime, cTime);
+						stepTo(startTime, cTime, substep);
 						cTime = startTime;
 					}
 					if (rightCrossed) {
-						stepTo(endTime, cTime);
+						stepTo(endTime, cTime, substep);
 						cTime = endTime;
 					}
-					if (time != endTime) stepTo(time, cTime);
+					if (time != endTime) stepTo(time, cTime, substep);
 				}
 			} else {
 				currentTime = time;
 				updateBounds(lastTime);
 				// TODO no need to update until the end?
-				onUpdate(time, lastTime);
+				onUpdate(time, lastTime, substep);
 			}
 		}
 	}
 	
-	public function onUpdate(time:Float, ?lastTime:Float):Void {
+	public function onUpdate(time:Float, ?lastTime:Float, substep:Bool = false):Void {
 
 	}
 	

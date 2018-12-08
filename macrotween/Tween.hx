@@ -44,7 +44,7 @@ class Tween extends TimelineItem {
 		setImplicitEndTimes();
 	}
 
-	override public function onUpdate(time:Float, ?lastTime:Float):Void {
+	override public function onUpdate(time:Float, ?lastTime:Float, substep:Bool = false):Void {
 		if (isTimeInBounds(time)) {
 			for (tweener in tweeners) {
 				tweener.tween(tweener.startValue, tweener.endValue, this, time);
@@ -139,7 +139,7 @@ class Tween extends TimelineItem {
 						return ${combinedField};
 					},
 					function (_macroTween_startValue:Float, _macroTween_endValue:Float, _macroTween_tween:Tween, _macroTween_time:Float):Void {
-						var _macroTween_progress:Float = 
+						var _macroTween_progress:Float =
 							macrotween.TimelineItem.progressFraction(_macroTween_time, _macroTween_tween.startTime, _macroTween_tween.endTime);
 						if (_macroTween_tween.ease != null) _macroTween_progress = _macroTween_tween.ease(_macroTween_progress);
 						// Sets value by interpolation

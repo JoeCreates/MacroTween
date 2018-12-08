@@ -42,8 +42,8 @@ class Timeline extends TimelineItem {
 		onReset();
 	}
 	
-	override public function onUpdate(time:Float, ?lastTime:Float):Void {
-		updateChildren(time, lastTime);
+	override public function onUpdate(time:Float, ?lastTime:Float, substep:Bool = false):Void {
+		updateChildren(time, lastTime, substep);
 	}
 
 	public function add(child:TimelineItem):Timeline {
@@ -112,7 +112,7 @@ class Timeline extends TimelineItem {
 				continue;
 			}
 			for (child in children) {
-				child.stepTo(time);
+				child.stepTo(time, null, substep);
 			}
 			relativeLast = time;
 		}
