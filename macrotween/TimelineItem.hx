@@ -14,7 +14,7 @@ class TimelineItem {
 	private var _isInBounds:Bool;
 	private var _isInBoundsDirty:Bool;
 	
-	public function new(startTime:Float, duration:Float) {
+	public function new(duration:Float = 1, startTime:Float = 0) {
 		_isInBounds = false;
 		_isInBoundsDirty = true;
 		

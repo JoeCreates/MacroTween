@@ -23,8 +23,8 @@ class Timeline extends TimelineItem {
 	
 	private var children:Array<TimelineItem>;
 
-	public function new(startTime:Float = 0, duration:Float = 1, relativeDuration:Float = 1) {
-		super(startTime, duration);
+	public function new(duration:Float = 1, startTime:Float = 0, relativeDuration:Float = 1) {
+		super(duration, startTime);
 		this.relativeDuration = relativeDuration;
 		this.children = new Array<TimelineItem>();
 	}
@@ -129,9 +129,12 @@ class Timeline extends TimelineItem {
 
 #end
 
-	public macro function tween(inst:Expr, startTime:Expr, duration:Expr, tweeners:Expr, ?ease:Expr):Expr {
+	public macro function tween(inst:Expr, tweeners:Expr, ?duration:Expr, ?startTime:Expr, ?ease:Expr):Expr {
+		if (duration == null) duration = macro null;
+		if (startTime == null) startTime = macro null;
+		
 		return macro {
-			${inst}.add(Tween.tween($startTime, $duration, $tweeners, $ease));
+			${inst}.add(Tween.tween($tweeners, $duration, $startTime, $ease));
 		};
 	}
 }

@@ -24,7 +24,7 @@ class TestTimeline implements ITest {
 	public function testSimpleTimeline():Void {
 		var tl = new Timeline();
 		
-		tl.tween(0, 1, b => 10);
+		tl.tween(b => 10);
 		tl.stepTo(0.5, null, true);
 		Assert.isTrue(b == 7.5);
 	}
@@ -32,17 +32,17 @@ class TestTimeline implements ITest {
 	public function testOvershootBounds():Void {
 		var tl = new Timeline();
 		
-		tl.tween(0, 1, b => 10);
+		tl.tween(b => 10);
 		tl.stepTo(0, null, true);
 		tl.stepTo(2, null, true);
 		Assert.isTrue(b == 10);
 	}
 	
 	public function testCallbackOrders():Void {
-		var tl = new Timeline(0, 1, 1);
+		var tl = new Timeline();
 		
-		var cbt1:CallbackTween = Tween.tween(0.1, 0.6, a.a => 0...100, null, {pack: ["tests"], name: "CallbackTween"});
-		var cbt2:CallbackTween = Tween.tween(0.2, 0.7, a.b => 100...200, null, {pack: ["tests"], name: "CallbackTween"});
+		var cbt1:CallbackTween = Tween.tween(a.a => 0...100, 0.6, 0.1, null, {pack: ["tests"], name: "CallbackTween"});
+		var cbt2:CallbackTween = Tween.tween(a.b => 100...200, 0.7, 0.2, null, {pack: ["tests"], name: "CallbackTween"});
 		
 		var str:String = "";
 		
@@ -64,10 +64,10 @@ class TestTimeline implements ITest {
 	}
 	
 	public function testCallbackOrdersAndBounds():Void {
-		var tl = new Timeline(0, 1, 1);
+		var tl = new Timeline();
 		
-		var cbt1:CallbackTween = Tween.tween(0.0, 0.6, a.a => 0...100, null, {pack: ["tests"], name: "CallbackTween"});
-		var cbt2:CallbackTween = Tween.tween(0.2, 0.8, a.b => 100...200, null, {pack: ["tests"], name: "CallbackTween"});
+		var cbt1:CallbackTween = Tween.tween(a.a => 0...100, 0.6, 0.0, null, {pack: ["tests"], name: "CallbackTween"});
+		var cbt2:CallbackTween = Tween.tween(a.b => 100...200, 0.8, 0.2, null, {pack: ["tests"], name: "CallbackTween"});
 		
 		var str:String = "";
 		
@@ -90,13 +90,13 @@ class TestTimeline implements ITest {
 	
 	public function testChaining():Void {
 		var tl:Timeline = new Timeline();
-		tl.tween(0, 1, b => 10).tween(0, 1, a.a => 20).stepTo(1, null, true);
+		tl.tween(b => 10).tween(a.a => 20).stepTo(1, null, true);
 		Assert.isTrue(a.a == 20 && b == 10);
 	}
 	
 	public function testSimpleRelativeDuration():Void {
-		var tl:Timeline = new Timeline(0, 1, 2);
-		tl.tween(0, 1, b => 10).stepTo(0.5, null, true);
+		var tl:Timeline = new Timeline(1, 0, 2);
+		tl.tween(b => 10).stepTo(0.5, null, true);
 		
 		// TODO is this broken?
 		Assert.isTrue(b == 7.5);
@@ -111,7 +111,7 @@ class TestTimeline implements ITest {
 		var tl:Timeline = new Timeline(0, 1);
 		var tl2:Timeline = new Timeline(0, 1);
 		
-		var tween = Tween.tween(0, 1, b => 0);
+		var tween = Tween.tween(b => 0);
 		tl.add(tween);
 		tl2.add(tween);
 		
@@ -129,11 +129,11 @@ class TestTimeline implements ITest {
 	}
 	
 	public function testTweensOrdering():Void {
-		var tl:Timeline = new Timeline(0, 10, 10);
+		var tl:Timeline = new Timeline(10, 0, 10);
 		
-		tl.tween(0, 1, b => 0...100);
-		tl.tween(2, 1, b => 2000...3000);
-		tl.tween(4, 1, b => 50000...60000);
+		tl.tween(b => 0...100, 1, 0);
+		tl.tween(b => 2000...3000, 1, 2);
+		tl.tween(b => 50000...60000, 1, 4);
 		
 		tl.stepTo(0.5, null, true);
 		Assert.isTrue(b == 50);

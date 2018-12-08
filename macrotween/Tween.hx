@@ -19,8 +19,8 @@ class Tween extends TimelineItem {
 	public var ease:Float->Float;
 	public var tweeners:Vector<Tweener>;
 
-	public function new(startTime:Float, duration:Float, tweeners:Array<Tweener>, ?ease:Float->Float) {
-		super(startTime, duration);
+	public function new(tweeners:Array<Tweener>, ?duration:Float = 1, ?startTime:Float = 0, ?ease:Float->Float) {
+		super(duration, startTime);
 		this.ease = ease;
 		this.tweeners = Vector.fromArrayCopy(tweeners);
 	}
@@ -68,7 +68,7 @@ class Tween extends TimelineItem {
 	
 #end
 
-	public static macro function tween(startTime:Expr, duration:Expr, tweeners:Expr, ?ease:Expr, ?tweenType:TypePath):Expr {
+	public static macro function tween(tweeners:Expr, ?duration:Expr, ?startTime:Expr, ?ease:Expr, ?tweenType:TypePath):Expr {
 		var tweenerObjects:Array<Expr> = [];
 		
 		var p = new Printer();
@@ -202,12 +202,14 @@ class Tween extends TimelineItem {
 		
 		handleExpr(null, tweeners);
 		
+		if (duration == null) duration = macro null;
+		if (startTime == null) startTime = macro null;
 		if (ease == null) ease = macro null;
 		if (tweenType == null) tweenType = {pack: ["macrotween"], name: "Tween"};
 		
 		// Return the new Tween object
 		return macro {
-			new $tweenType(${startTime}, ${duration}, $a{tweenerObjects}, ${ease});};
+			new $tweenType($a{tweenerObjects}, ${duration}, ${startTime}, ${ease});};
 	}
 	
 }

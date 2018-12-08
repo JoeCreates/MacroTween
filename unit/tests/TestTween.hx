@@ -15,7 +15,7 @@ class TestTween implements ITest {
 	
 	public function testTweenSingleFieldToValue() {
 		var myObject:{ x:Float } = { x: 0 };
-		var tween:Tween = Tween.tween(0, 1, myObject.x => 100, linear);
+		var tween:Tween = Tween.tween(myObject.x => 100, 1, 0, linear);
 		
 		tween.stepTo(0, null, true);
 		Assert.isTrue(myObject.x == 0);
@@ -35,7 +35,7 @@ class TestTween implements ITest {
 	
 	public function testTweenSingleFieldWithImplicitStart() {
 		var myObject:{ x:Float } = { x: 50 };
-		var tween:Tween = Tween.tween(0, 1, [myObject.x => _...100], linear);
+		var tween:Tween = Tween.tween([myObject.x => _...100], 1, 0, linear);
 		
 		tween.stepTo(0, null, true);
 		Assert.isTrue(myObject.x == 50);
@@ -46,7 +46,7 @@ class TestTween implements ITest {
 	
 	public function testMultiVariableSameValueTween() {
 		var myObject:{ scale:{x:Float, y:Float}, position:{x:Float, y:Float}} = { scale: {x: 0, y: 0}, position: {x: 0, y: 0} };
-		var tween:Tween = Tween.tween(0, 1, myObject => [[scale, position] => [[x, y] => 100]], linear);
+		var tween:Tween = Tween.tween(myObject => [[scale, position] => [[x, y] => 100]], 1, 0, linear);
 		
 		tween.stepTo(0, null, true);
 		Assert.isTrue(myObject.position.x == 0 && myObject.scale.y == 0);
@@ -57,7 +57,7 @@ class TestTween implements ITest {
 	
 	public function testTweenRanges() {
 		var myObject:{ x:Float } = { x: 0 };
-		var tween:Tween = Tween.tween(0, 1, [myObject.x => 10...20], linear);
+		var tween:Tween = Tween.tween([myObject.x => 10...20], 1, 0, linear);
 		
 		tween.stepTo(0.0, null, true);
 		Assert.isTrue(myObject.x == 10);
@@ -71,7 +71,7 @@ class TestTween implements ITest {
 	
 	public function testTweenLocal() {
 		var x:Float = 50;
-		var tween:Tween = Tween.tween(0, 1, [x => 100], linear);
+		var tween:Tween = Tween.tween([x => 100], 1, 0, linear);
 		
 		Assert.isTrue(x == 50);
 		
@@ -89,7 +89,7 @@ class TestTween implements ITest {
 		var myObject:{ x:Float } = { x: 0 };
 		var anotherObject:{ x:Float, y:Float, z:Float } = { x: 0, y: 0, z: 0 };
 		
-		var tween:Tween = Tween.tween(0, 1, [myObject.x => 100, anotherObject.x => 200], linear);
+		var tween:Tween = Tween.tween([myObject.x => 100, anotherObject.x => 200], 1, 0, linear);
 		
 		tween.stepTo(0.0, null, true);
 		Assert.isTrue(myObject.x == 0 && anotherObject.x == 0);
@@ -104,7 +104,7 @@ class TestTween implements ITest {
 	public function testCompoundMultipleFields() {
 		var myObject:{ x:Float, y:Float } = { x: 0, y: 0 };
 		
-		var tween:Tween = Tween.tween(0, 1, [myObject => [x => 100, y => 100]], linear);
+		var tween:Tween = Tween.tween([myObject => [x => 100, y => 100]], 1, 0, linear);
 		
 		tween.stepTo(0.0, null, true);
 		Assert.isTrue(myObject.x == 0 && myObject.y == 0);
@@ -120,7 +120,7 @@ class TestTween implements ITest {
 		var myObject:{ x:Float, y:Float } = { x: 0, y: 0 };
 		var anotherObject:{ x:Float, y:Float, z:Float } = { x: 0, y : 0, z : 0 };
 		
-		var tween:Tween = Tween.tween(0, 1, [[myObject, anotherObject] => [ x => 100, y => 200]], linear);
+		var tween:Tween = Tween.tween([[myObject, anotherObject] => [ x => 100, y => 200]], 1, 0, linear);
 		
 		Assert.isTrue(myObject.x == 0);
 		
@@ -134,7 +134,7 @@ class TestTween implements ITest {
 	public function testImplicitStartOrEnd() {
 		var myObject:{ x:Float } = { x: 0 };
 		
-		var tween:Tween = Tween.tween(0, 1, [myObject.x => 10..._], linear);
+		var tween:Tween = Tween.tween([myObject.x => 10..._], 1, 0, linear);
 		
 		tween.stepTo(0.5, null, true);
 		Assert.isTrue(myObject.x == 5);
@@ -146,7 +146,7 @@ class TestTween implements ITest {
 			x = value + add;
 		};
 		
-		var tween:Tween = Tween.tween(0, 1, [myFunction(10...20, 10)], linear);
+		var tween:Tween = Tween.tween([myFunction(10...20, 10)], 1, 0, linear);
 		
 		Assert.isTrue(x == 0);
 		tween.stepTo(0.5, null, true);
@@ -159,10 +159,10 @@ class TestTween implements ITest {
 		var startValue:Float = 0;
 		var endValue:Float = 0;
 		
-		var t1 = Tween.tween(0, 1, [time => 100], linear);
-		var t2 = Tween.tween(0, 1, [tween => 100], linear);
-		var t3 = Tween.tween(0, 1, [startValue => 100], linear);
-		var t4 = Tween.tween(0, 1, [endValue => 100], linear);
+		var t1 = Tween.tween([time => 100], 1, 0, linear);
+		var t2 = Tween.tween([tween => 100], 1, 0, linear);
+		var t3 = Tween.tween([startValue => 100], 1, 0, linear);
+		var t4 = Tween.tween([endValue => 100], 1, 0, linear);
 		
 		for (t in [t1, t2, t3, t4]) t.stepTo(0.5, null, true);
 		
@@ -172,7 +172,7 @@ class TestTween implements ITest {
 	public function testTweenAbstract() {
 		var x:HelperAbstractFloat = new HelperAbstractFloat(50.0);
 		
-		var tween:Tween = Tween.tween(0, 1, [x => 100], linear);
+		var tween:Tween = Tween.tween([x => 100], 1, 0, linear);
 		
 		Assert.isTrue(x == 50);
 		
@@ -189,7 +189,7 @@ class TestTween implements ITest {
 	public function testTweenCallbacks() {
 		var x:Float = 50;
 		
-		var cbt1:CallbackTween = Tween.tween(0.0, 1.0, x => 0...100, null, {pack: ["tests"], name: "CallbackTween"});
+		var cbt1:CallbackTween = Tween.tween([x => 0...100], 1, 0, null, {pack: ["tests"], name: "CallbackTween"});
 		
 		var str:String = "";
 		

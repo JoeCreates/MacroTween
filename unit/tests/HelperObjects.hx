@@ -6,8 +6,8 @@ class CallbackTween extends Tween {
 	public var leftHit:Bool->Void;
 	public var rightHit:Bool->Void;
 	
-	public function new(startTime:Float, duration:Float, tweeners:Array<Tweener>, ?ease:Float->Float) {
-		super(startTime, duration, tweeners, ease);
+	public function new(tweeners:Array<Tweener>, duration:Float = 1, startTime:Float = 0, ?ease:Float->Float) {
+		super(tweeners, duration, startTime, ease);
 	}
 	
 	override public function onLeftHit(rev:Bool):Void {
