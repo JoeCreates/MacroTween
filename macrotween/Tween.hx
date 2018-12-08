@@ -1,6 +1,7 @@
 package macrotween;
 
 import macrotween.TimelineItem;
+import haxe.ds.Vector;
 
 #if macro
 import haxe.macro.ExprTools;
@@ -16,24 +17,26 @@ class Tween {
 #else
 class Tween extends TimelineItem {
 	public var ease:Float->Float;
-	public var tweeners:Array<Tweener>;
+	public var tweeners:Vector<Tweener>;
 
 	public function new(startTime:Float, duration:Float, tweeners:Array<Tweener>, ?ease:Float->Float) {
 		super(startTime, duration);
 		this.ease = ease;
-		this.tweeners = tweeners;
+		this.tweeners = Vector.fromArrayCopy(tweeners);
 	}
 	
 	override public function onLeftHit(reversed:Bool):Void {
 		if (!reversed) {
 			setImplicitStartTimes();
 		}
+		trace("lefthit");
 	}
 	
 	override public function onRightHit(reversed:Bool):Void {
 		if (reversed) {
 			setImplicitEndTimes();
 		}
+		trace("righthit");
 	}
 	
 	override public function onStartInBounds():Void {
@@ -42,11 +45,8 @@ class Tween extends TimelineItem {
 	}
 
 	override public function onUpdate(time:Float, ?lastTime:Float):Void {
-		super.onUpdate(time, lastTime);
-		
 		if (isTimeInBounds(time)) {
-			for (i in 0...tweeners.length) {
-				var tweener = tweeners[i];
+			for (tweener in tweeners) {
 				tweener.tween(tweener.startValue, tweener.endValue, this, time);
 			}
 		}
@@ -139,7 +139,7 @@ class Tween extends TimelineItem {
 						return ${combinedField};
 					},
 					function (_macroTween_startValue:Float, _macroTween_endValue:Float, _macroTween_tween:Tween, _macroTween_time:Float):Void {
-						var _macroTween_progress:Float =
+						var _macroTween_progress:Float = 
 							macrotween.TimelineItem.progressFraction(_macroTween_time, _macroTween_tween.startTime, _macroTween_tween.endTime);
 						if (_macroTween_tween.ease != null) _macroTween_progress = _macroTween_tween.ease(_macroTween_progress);
 						// Sets value by interpolation
@@ -208,7 +208,8 @@ class Tween extends TimelineItem {
 		if (tweenType == null) tweenType = {pack: ["macrotween"], name: "Tween"};
 		
 		// Return the new Tween object
-		return macro {new $tweenType(${startTime}, ${duration}, $a{tweenerObjects}, ${ease});};
+		return macro {
+			new $tweenType(${startTime}, ${duration}, $a{tweenerObjects}, ${ease});};
 	}
 	
 }

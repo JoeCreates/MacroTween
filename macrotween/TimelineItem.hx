@@ -53,52 +53,63 @@ class TimelineItem {
 	 * Step to a relative time on the timeline item
 	 * @param	dt Time delta
 	 */
-	public function step(dt:Float):Void {
-		stepTo(currentTime + dt);
+	public inline function step(dt:Float, substep:Bool = false):Void {
+		if (currentTime == null) {
+			currentTime = 0;
+		}
+		stepTo(currentTime + dt, substep);
 	}
 	
 	/**
 	 * Step to an absolute time on the timeline item
 	 * @param	nextTime Absolute time
 	 */
-	public function stepTo(time:Float, ?lastTime:Float):Void {
+	public function stepTo(time:Float, ?lastTime:Float, substep:Bool = false):Void {
 		if (lastTime == null) lastTime = currentTime;
 		if (lastTime == time) return;
 		
-		var leftCrossed:Bool = lastTime != null &&
-			((lastTime < startTime && time > startTime) || (lastTime > startTime && time < startTime));
-		var rightCrossed:Bool = lastTime != null &&
-			((lastTime < endTime && time > endTime) || (lastTime > endTime && time < endTime));
-		var rev:Bool = lastTime != null && lastTime > time;
-		
-		if (leftCrossed || rightCrossed) {
-			var cTime:Float = lastTime;
-			if (rev) {
-				if (rightCrossed) {
-					stepTo(endTime, cTime);
-					cTime = endTime;
-				}
-				if (leftCrossed) {
-					stepTo(startTime, cTime);
-					cTime = startTime;
-				}
-				if (time != startTime) stepTo(time, cTime);
-			} else {
-				if (leftCrossed) {
-					stepTo(startTime, cTime);
-					cTime = startTime;
-				}
-				if (rightCrossed) {
-					stepTo(endTime, cTime);
-					cTime = endTime;
-				}
-				if (time != endTime) stepTo(time, cTime);
-			}
-		} else {
+		if (!substep) {
 			currentTime = time;
-			updateBounds(lastTime);
-			
 			onUpdate(time, lastTime);
+			updateBounds(lastTime);
+		} else {
+		
+			var hasLastTime:Bool = lastTime != null;
+			var leftCrossed:Bool = hasLastTime &&
+				((lastTime < startTime && time > startTime) || (lastTime > startTime && time < startTime));
+			var rightCrossed:Bool = lastTime != null &&
+				((lastTime < endTime && time > endTime) || (lastTime > endTime && time < endTime));
+			var rev:Bool = hasLastTime && lastTime > time;
+			
+			if (leftCrossed || rightCrossed) {
+				var cTime:Float = lastTime;
+				if (rev) {
+					if (rightCrossed) {
+						stepTo(endTime, cTime);
+						cTime = endTime;
+					}
+					if (leftCrossed) {
+						stepTo(startTime, cTime);
+						cTime = startTime;
+					}
+					if (time != startTime) stepTo(time, cTime);
+				} else {
+					if (leftCrossed) {
+						stepTo(startTime, cTime);
+						cTime = startTime;
+					}
+					if (rightCrossed) {
+						stepTo(endTime, cTime);
+						cTime = endTime;
+					}
+					if (time != endTime) stepTo(time, cTime);
+				}
+			} else {
+				currentTime = time;
+				updateBounds(lastTime);
+				// TODO no need to update until the end?
+				onUpdate(time, lastTime);
+			}
 		}
 	}
 	
@@ -113,7 +124,7 @@ class TimelineItem {
 		return Math.min(1, Math.max(0, (time - start) / (end - start)));
 	}
 	
-	private function isTimeInBounds(time:Float):Bool {
+	private inline function isTimeInBounds(time:Float):Bool {
 		return time >= startTime && time <= endTime;
 	}
 	

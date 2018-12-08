@@ -43,7 +43,6 @@ class Timeline extends TimelineItem {
 	}
 	
 	override public function onUpdate(time:Float, ?lastTime:Float):Void {
-		super.onUpdate(time, lastTime);
 		updateChildren(time, lastTime);
 	}
 
@@ -62,16 +61,17 @@ class Timeline extends TimelineItem {
 		children.splice(0, children.length);
 	}
 	
-	private function updateChildren(time:Float, ?lastTime:Float):Void {
+	private function updateChildren(time:Float, ?lastTime:Float, substep:Bool = false):Void {
 		var relativeTime:Float = (time - startTime) * relativeDuration / duration;
 		
-		if (lastTime == null) {
+		if (!substep || lastTime == null) {
 			for (child in children) {
-				child.stepTo(time);
+				child.stepTo(time, substep);
 			}
 			return;
 		}
 		
+		// TODO could make this more efficient
 		var relativeLast:Float = (lastTime - startTime) * relativeDuration / duration;
 		
 		var times:Array<Float> = [ relativeTime ];
