@@ -128,7 +128,7 @@ class TimelineItem {
 		return time >= startTime && time <= endTime;
 	}
 	
-	private function isCurrentTimeInBounds():Bool {
+	public function isCurrentTimeInBounds():Bool {
 		if (currentTime == null) {
 			return false;
 		}
