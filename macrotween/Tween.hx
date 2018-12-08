@@ -29,14 +29,12 @@ class Tween extends TimelineItem {
 		if (!reversed) {
 			setImplicitStartTimes();
 		}
-		trace("lefthit");
 	}
 	
 	override public function onRightHit(reversed:Bool):Void {
 		if (reversed) {
 			setImplicitEndTimes();
 		}
-		trace("righthit");
 	}
 	
 	override public function onStartInBounds():Void {
