@@ -95,7 +95,7 @@ class TestTimeline implements ITest {
 	}
 	
 	public function testSimpleRelativeDuration():Void {
-		var tl:Timeline = new Timeline(2, (v)->{ return v * 0.5; });
+		var tl:Timeline = new Timeline(2, function(v:Float) { return v * 0.5; });
 		tl.tween(five => 10).stepTo(0.5, null, true);
 		
 		Assert.isTrue(five == 6.25);
