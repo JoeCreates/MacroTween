@@ -7,8 +7,8 @@ os:
 # see haxe versions: http://haxe.org/website-content/downloads/versions.json
 haxe:
   - "3.4.4"
-  - "4.0.0-preview.1"
-  - "4.0.0-preview.2"
+  - "4.0.0-preview.4"
+  - "4.0.0-preview.5"
   - development
 
 install:
