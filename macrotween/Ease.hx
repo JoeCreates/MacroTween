@@ -57,8 +57,8 @@ class Ease {
 	
 	// Atan
 	public static inline function atanIn(t:Float):Float return atanInAdv.bind(_, 15)(t);
-	public static inline function atanInOut(t:Float):Float return atanInAdv.bind(_, 15)(t);
-	public static inline function atanOut(t:Float):Float return atanInAdv.bind(_, 15)(t);
+	public static inline function atanInOut(t:Float):Float return atanInOutAdv.bind(_, 15)(t);
+	public static inline function atanOut(t:Float):Float return atanOutAdv.bind(_, 15)(t);
 
 	public static inline function atanInAdv(t:Float, a:Float = 15):Float {
 		var m:Float = Math.atan(a);
