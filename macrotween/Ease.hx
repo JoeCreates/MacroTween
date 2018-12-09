@@ -180,10 +180,10 @@ class Ease {
 	}
 	
 	// Elastic
-	public static inline function elasticIn(t:Float):Float return elasticInAdv.bind(_, 1, 0.4)(t);
-	public static inline function elasticOut(t:Float):Float return elasticOutAdv.bind(_, 1, 0.4)(t);
-	public static inline function elasticInOut(t:Float):Float return elasticInOutAdv.bind(_, 1, 0.4)(t);
-	public static inline function elasticOutIn(t:Float):Float return elasticOutInAdv.bind(_, 1, 0.4)(t);
+	public static inline function elasticIn(t:Float):Float return elasticInAdv.bind(_, 2, 1)(t);
+	public static inline function elasticOut(t:Float):Float return elasticOutAdv.bind(_, 1, 4)(t);
+	public static inline function elasticInOut(t:Float):Float return elasticInOutAdv.bind(_, 2, 1)(t);
+	public static inline function elasticOutIn(t:Float):Float return elasticOutInAdv.bind(_, 1, 4)(t);
 	
 	public static inline function elasticInAdv(t:Float, amp:Float, period:Float):Float {
 		return elasticHelperIn(t, 0, 1, 1, amp, period);
