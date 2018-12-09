@@ -12,30 +12,30 @@ import utest.ITest;
  */
 class TestTimeline implements ITest {
 	private var a:{a:Float, b:Float};
-	private var b:Float;
+	private var five:Float;
 	
 	public function new() {}
 	
 	public function setup():Void {
 		a = {a: 10, b: 20};
-		b = 5;
+		five = 5;
 	}
 	
 	public function testSimpleTimeline():Void {
 		var tl = new Timeline();
 		
-		tl.tween(b => 10);
+		tl.tween(five => 10);
 		tl.stepTo(0.5, null, true);
-		Assert.isTrue(b == 7.5);
+		Assert.isTrue(five == 7.5);
 	}
 	
 	public function testOvershootBounds():Void {
 		var tl = new Timeline();
 		
-		tl.tween(b => 10);
+		tl.tween(five => 10);
 		tl.stepTo(0, null, true);
 		tl.stepTo(2, null, true);
-		Assert.isTrue(b == 10);
+		Assert.isTrue(five == 10);
 	}
 	
 	public function testCallbackOrders():Void {
@@ -90,16 +90,15 @@ class TestTimeline implements ITest {
 	
 	public function testChaining():Void {
 		var tl:Timeline = new Timeline();
-		tl.tween(b => 10).tween(a.a => 20).stepTo(1, null, true);
-		Assert.isTrue(a.a == 20 && b == 10);
+		tl.tween(five => 10).tween(a.a => 20).stepTo(1, null, true);
+		Assert.isTrue(a.a == 20 && five == 10);
 	}
 	
 	public function testSimpleRelativeDuration():Void {
-		var tl:Timeline = new Timeline(1, 0, 2);
-		tl.tween(b => 10).stepTo(0.5, null, true);
+		var tl:Timeline = new Timeline(2, (v)->{ return v * 0.5; });
+		tl.tween(five => 10).stepTo(0.5, null, true);
 		
-		// TODO is this broken?
-		Assert.isTrue(b == 7.5);
+		Assert.isTrue(five == 6.25);
 	}
 	
 	public function testNestedTimelines():Void {
@@ -111,35 +110,35 @@ class TestTimeline implements ITest {
 		var tl:Timeline = new Timeline(0, 1);
 		var tl2:Timeline = new Timeline(0, 1);
 		
-		var tween = Tween.tween(b => 0);
+		var tween = Tween.tween(five => 0);
 		tl.add(tween);
 		tl2.add(tween);
 		
 		// Tween is new, so can be stepped to 0
 		tl.stepTo(1, null, true);
-		Assert.isTrue(b == 0);
+		Assert.isTrue(five == 0);
 		
 		// Tween was already stepped to 1 on the other timeline
 		// So this will not change anything
-		b = 500;
+		five = 500;
 		tl2.stepTo(1, null, true);
-		Assert.isTrue(b == 500);
+		Assert.isTrue(five == 500);
 		
 		// TODO moving tweens between timelines without breaking stuff?
 	}
 	
 	public function testTweensOrdering():Void {
-		var tl:Timeline = new Timeline(10, 0, 10);
+		var tl:Timeline = new Timeline(10, 0);
 		
-		tl.tween(b => 0...100, 1, 0);
-		tl.tween(b => 2000...3000, 1, 2);
-		tl.tween(b => 50000...60000, 1, 4);
+		tl.tween(five => 0...100, 1, 0);
+		tl.tween(five => 2000...3000, 1, 2);
+		tl.tween(five => 50000...60000, 1, 4);
 		
 		tl.stepTo(0.5, null, true);
-		Assert.isTrue(b == 50);
+		Assert.isTrue(five == 50);
 		tl.stepTo(2.5, null, true);
-		Assert.isTrue(b == 2500);
+		Assert.isTrue(five == 2500);
 		tl.stepTo(4.5, null, true);
-		Assert.isTrue(b == 55000);
+		Assert.isTrue(five == 55000);
 	}
 }

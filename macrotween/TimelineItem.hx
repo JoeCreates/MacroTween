@@ -14,13 +14,16 @@ class TimelineItem {
 	private var _isInBounds:Bool;
 	private var _isInBoundsDirty:Bool;
 	
-	public function new(duration:Float = 1, startTime:Float = 0) {
+	public var ease:Float->Float;
+	
+	public function new(?duration:Float = 1, ?startTime:Float = 0, ?ease:Float->Float) {
 		_isInBounds = false;
 		_isInBoundsDirty = true;
 		
 		this.currentTime = null;
 		this.startTime = startTime;
 		this.duration = duration;
+		this.ease = ease;
 	}
 	
 	public function onReset():Void {

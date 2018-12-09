@@ -18,14 +18,12 @@ class Timeline {
  * Timelines are themselves timeline items, and so can be nested within each other.
  */
 class Timeline extends TimelineItem {
-	public var relativeDuration:Float;
 	public var length(get, never):Int;
 	
 	private var children:Array<TimelineItem>;
 
-	public function new(duration:Float = 1, startTime:Float = 0, relativeDuration:Float = 1) {
-		super(duration, startTime);
-		this.relativeDuration = relativeDuration;
+	public function new(?duration:Float = 1, ?startTime:Float = 0, ?ease:Float->Float) {
+		super(duration, startTime, ease);
 		this.children = new Array<TimelineItem>();
 	}
 	
@@ -62,7 +60,16 @@ class Timeline extends TimelineItem {
 	}
 	
 	private function updateChildren(time:Float, ?lastTime:Float, substep:Bool = false):Void {
-		var relativeTime:Float = (time - startTime) * relativeDuration / duration;
+		// TODO get rid of these, use eased versions instead
+		var actualTime:Float = time;
+		var actualLastTime:Null<Float> = lastTime;
+		
+		if (ease != null) {
+			time = ease(time);
+		}
+		if (lastTime != null && ease != null) {
+			lastTime = ease(lastTime);
+		}
 		
 		if (!substep || lastTime == null) {
 			for (child in children) {
@@ -72,8 +79,15 @@ class Timeline extends TimelineItem {
 		}
 		
 		// TODO could make this more efficient
-		var relativeLast:Float = (lastTime - startTime) * relativeDuration / duration;
+		var relativeTime:Float = (actualTime - startTime);
+		var relativeLast:Float = (lastTime - startTime);
 		
+		if (ease != null) {
+			relativeTime = ease(relativeTime);
+			relativeLast = ease(relativeLast);
+		}
+		
+		// TODO doesn't account for functions that change relative ordering of times
 		var times:Array<Float> = [ relativeTime ];
 		for (child in children) {
 			if (time < lastTime) {
@@ -112,7 +126,7 @@ class Timeline extends TimelineItem {
 				continue;
 			}
 			for (child in children) {
-				child.stepTo(time, null, substep);
+				child.stepTo(ease != null ? ease(time) : time, null, substep);
 			}
 			relativeLast = time;
 		}

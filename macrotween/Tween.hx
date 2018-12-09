@@ -16,12 +16,10 @@ import haxe.macro.Context;
 class Tween {
 #else
 class Tween extends TimelineItem {
-	public var ease:Float->Float;
 	public var tweeners:Vector<Tweener>;
 
 	public function new(tweeners:Array<Tweener>, ?duration:Float = 1, ?startTime:Float = 0, ?ease:Float->Float) {
-		super(duration, startTime);
-		this.ease = ease;
+		super(duration, startTime, ease);
 		this.tweeners = Vector.fromArrayCopy(tweeners);
 	}
 	
