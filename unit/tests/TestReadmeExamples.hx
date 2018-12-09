@@ -120,7 +120,7 @@ class TestReadmeExamples implements ITest {
 	public function testFunctionTween() {
 		// Repeatedly call function with parameters
 		var result:Float = 0;
-		var myFunction = (v:Float)-> {
+		var myFunction = function(v:Float) {
 			result = v;
 		};
 		
