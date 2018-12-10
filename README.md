@@ -11,6 +11,42 @@ MacroTween is a Haxe library for concise tweening and timelines.
 
 ## Usage
 
+```haxe
+// Concise arrow syntax
+// Tween myObject.x to 100
+Tween.tween(myObject.x => 100, Ease.quadInOut);
+
+// Specify ranges
+Tween.tween(myObject.x => 10...20);
+
+// Tween local variables
+var x:Float = 10;
+Tween.tween(x => 100);
+
+// Tween multiple objects at once
+Tween.tween([object1.x => 100, object2.x => 200]);
+
+// Compound expressions
+Tween.tween(obj => [x => 100, y => 100]);
+Tween.tween([objA, objB] => [x => 100, y => 100]);
+Tween.tween( mySprite.scale => [[x, y] => 100]]);
+
+// Implicit start or end values
+// A reverse tween from t=1...0 would tween from whatever the initial value is to 10
+Tween.tween( myObject.x => 10..._);
+
+// Repeatedly call function with tweening parameters
+Tween.tween(myFunc(10...20));
+
+//TODO
+// Tween from timeline
+timeline.tween(...);
+
+// Chaining
+timeline.tween(...).tween(...);
+
+// 
+
 See the [demo code](https://github.com/JoeCreates/MacroTweenDemo) and run it in your [browser](https://joecreates.github.io/MacroTweenDemo/index.html). Also see examples in the [unit tests](https://github.com/JoeCreates/MacroTween/blob/master/unit/tests/TestReadmeExamples.hx).
 
 ## Notes
