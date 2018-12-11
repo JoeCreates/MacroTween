@@ -1,5 +1,27 @@
 package macrotween;
 
+class BoundSignal {
+	public var listeners:Array<Bool->Void>;
+	
+	public function new() {
+		listeners = new Array<Bool->Void>();
+	}
+	
+	public function add(listener:Bool->Void) {
+		listeners.push(listener);
+	}
+	
+	public function remove(listener:Bool->Void) {
+		listeners.remove(listener);
+	}
+	
+	public function dispatch(reversed:Bool):Void {
+		for (listener in listeners) {
+			listener(reversed);
+		}
+	}
+}
+
 /**
  * The TimelineItem class is the base class for any object that can go on a timeline.
  */
@@ -15,6 +37,15 @@ class TimelineItem {
 	private var _isInBoundsDirty:Bool;
 	
 	public var ease:Float->Float;
+	
+	public var onEndSignal(get, never):BoundSignal;
+	public var onStartSignal(get, never):BoundSignal;
+	
+	private var _onEndSignal:BoundSignal;
+	private var _onStartSignal:BoundSignal;
+
+	private function get_onEndSignal():BoundSignal {if (_onEndSignal == null) {_onEndSignal = new BoundSignal();} return _onEndSignal;}
+	private function get_onStartSignal():BoundSignal {if (_onStartSignal == null) {_onStartSignal = new BoundSignal();} return _onStartSignal;}
 	
 	public function new(?duration:Float = 1, ?startTime:Float = 0, ?ease:Float->Float) {
 		_isInBounds = false;
@@ -35,11 +66,11 @@ class TimelineItem {
 	}
 	
 	public function onLeftHit(reversed:Bool):Void {
-		
+		if (_onStartSignal != null) _onStartSignal.dispatch(reversed);
 	}
 	
 	public function onRightHit(reversed:Bool):Void {
-		
+		if (_onEndSignal != null) _onEndSignal.dispatch(reversed);
 	}
 	
 	// If we initially stepTo within the bounds, we cannot infer
@@ -146,24 +177,31 @@ class TimelineItem {
 	}
 	
 	private function updateBounds(lastTime:Null<Float>):Void {
-		// First update - if we are in bounds, but don't know what direction we came from
 		var currentTimeInBounds = isCurrentTimeInBounds();
-		if (lastTime == null && !currentTimeInBounds) {
-			return;
-		} else if (lastTime == null && currentTimeInBounds && currentTime != startTime && currentTime != endTime) {
-			onStartInBounds();
-		} else { // Not the first update, and we can work out what direction we came from
-			
-			if (lastTime == null) {
+		// If first update
+		if (lastTime == null) {
+			// If not in bounds, do nothing
+			if (!currentTimeInBounds) {
+				return;
+			}
+			// Else if in bounds
+			else if (currentTime != startTime && currentTime != endTime) {
+				onStartInBounds();
+			}
+			// Else if starting on bounds
+			// Note that a point may have startTime == endTime
+			// TODO requires further consideration, what is the value of "reverse"?
+			else {
 				if (currentTime == startTime) {
 					onLeftHit(false);
 				}
 				if (currentTime == endTime) {
 					onRightHit(true);
 				}
-				return;
 			}
-			
+		}
+		// If not first update
+		else { 
 			if (currentTime >= startTime && lastTime < startTime) {
 				onLeftHit(false);
 			}
