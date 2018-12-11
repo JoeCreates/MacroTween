@@ -219,8 +219,8 @@ class Tweener {
 	public var tween:Float->Float->Tween->Float->Void;
 	
 	public function new(startValue:Float, endValue:Float, implicitStart:Bool, implicitEnd:Bool, currentValue:Void->Float, tween:TweenerFunc) {
-		this.startValue = startValue;
-		this.endValue = endValue;
+		this.startValue = implicitStart ? endValue : startValue;
+		this.endValue = implicitEnd ? startValue : endValue;
 		this.implicitStart = implicitStart;
 		this.implicitEnd = implicitEnd;
 		this.currentValue = currentValue;
