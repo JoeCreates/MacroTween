@@ -66,7 +66,8 @@ class Ease {
 	}
 
 	public static inline function atanOutAdv(t:Float, a:Float = 15):Float {
-		return Math.atan(t * a)  / 2;
+		var m:Float = Math.atan(a);
+		return Math.atan(t * a)  / m;
 	}
 
 	public static inline function atanInOutAdv(t:Float, a:Float = 15):Float {
