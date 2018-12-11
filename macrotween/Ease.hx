@@ -66,7 +66,8 @@ class Ease {
 	}
 
 	public static inline function atanOutAdv(t:Float, a:Float = 15):Float {
-		return Math.atan(t * a)  / 2;
+		var m:Float = Math.atan(a);
+		return Math.atan(t * a)  / m;
 	}
 
 	public static inline function atanInOutAdv(t:Float, a:Float = 15):Float {
@@ -292,7 +293,7 @@ class Ease {
 	}
 	
 	// Linear
-	public static inline function none(t:Float):Float {
+	public static inline function linear(t:Float):Float {
 		return t;
 	}
 	
@@ -388,5 +389,25 @@ class Ease {
 		return (t < 0.5) ? sineOut(2 * t) / 2 : sineIn(2 * t - 1) / 2 + 0.5;
 	}
 	
-	public static inline function linear(t:Float):Float return t;
+	// Continuous piecewise linear, equal-length pieces (2 or more pieces required)
+	public static inline function piecewiseLinear(t:Float, pieces:Array<Float>):Float {
+		inline function lerp(a:Float, b:Float, f:Float):Float {
+			return a + f * (b - a);
+		};
+		
+		var segments:Int = pieces.length - 1;
+		var segmentLength:Float = 1 / segments;
+		
+		t = Math.min(1, Math.max(0, t));
+		var segmentIdx:Int = Math.floor(t * segments);
+		
+		var basePoint:Int = segmentIdx;
+		var nextPoint:Int = segmentIdx + 1;
+		
+		var p1:Float = pieces[basePoint];
+		var p2:Float = pieces[nextPoint];
+		
+		var segmentT:Float = (t - (segmentLength * segmentIdx)) / segmentLength;
+		return lerp(p1, p2, segmentT);
+	}
 }
