@@ -13,7 +13,7 @@ class TestEase implements ITest {
 	}
 	
 	public function testLinear() {
-		Assert.isTrue(Ease.none(0.5) == 0.5 && Ease.none(-0.5) == -0.5);
+		Assert.isTrue(Ease.linear(0.5) == 0.5 && Ease.linear(-0.5) == -0.5);
 	}
 	
 	public function testQuad() {
