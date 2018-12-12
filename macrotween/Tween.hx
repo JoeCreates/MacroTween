@@ -47,6 +47,10 @@ class Tween extends TimelineItem {
 	}
 	
 	private function setImplicitStartTimes():Void {
+		if (_wasInBounds) {
+			return;
+		}
+		
 		for (tweener in tweeners) {
 			if (tweener.implicitStart) {
 				tweener.startValue = tweener.currentValue();
@@ -55,6 +59,10 @@ class Tween extends TimelineItem {
 	}
 	
 	private function setImplicitEndTimes():Void {
+		if (_wasInBounds) {
+			return;
+		}
+		
 		for (tweener in tweeners) {
 			if (tweener.implicitEnd) {
 				tweener.endValue = tweener.currentValue();

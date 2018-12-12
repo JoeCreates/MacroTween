@@ -107,6 +107,12 @@ class TestReadmeExamples implements ITest {
 		// A reverse tween from t=1...0 would tween from whatever the initial value is to 10
 		var tween = Tween.tween(myObject.x => 10..._);
 		
+		tween.stepTo(1, null, true);
+		Assert.isTrue(myObject.x == 0);
+		
+		tween.stepTo(0.5, null, true);
+		Assert.isTrue(myObject.x == 5);
+		
 		tween.stepTo(0, null, true);
 		Assert.isTrue(myObject.x == 10);
 		

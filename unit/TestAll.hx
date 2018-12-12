@@ -8,6 +8,7 @@ import tests.TestEase;
 import tests.TestReadmeExamples;
 import tests.TestTimeline;
 import tests.TestTimelineItem;
+import tests.TestTimelineNesting;
 import tests.TestTween;
 import utest.Runner;
 import utest.ui.Report;
@@ -28,6 +29,7 @@ class TestAll #if lime extends Application #end {
 		runner.addCase(new TestReadmeExamples());
 		runner.addCase(new TestTimeline());
 		runner.addCase(new TestTimelineItem());
+		runner.addCase(new TestTimelineNesting());
 		runner.addCase(new TestTween());
 	}
 

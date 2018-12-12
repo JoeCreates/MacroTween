@@ -35,6 +35,7 @@ class TimelineItem {
 
 	private var _isInBounds:Bool;
 	private var _isInBoundsDirty:Bool;
+	private var _wasInBounds:Bool;
 	
 	public var ease:Float->Float;
 	
@@ -50,6 +51,7 @@ class TimelineItem {
 	public function new(?duration:Float = 1, ?startTime:Float = 0, ?ease:Float->Float) {
 		_isInBounds = false;
 		_isInBoundsDirty = true;
+		_wasInBounds = false;
 		
 		this.currentTime = null;
 		this.startTime = startTime;
@@ -96,9 +98,11 @@ class TimelineItem {
 	
 	/**
 	 * Step to an absolute time on the timeline item
-	 * @param	nextTime Absolute time
 	 */
+	// TODO make lastTime a member of the timelineitem!
 	public function stepTo(time:Float, ?lastTime:Float, substep:Bool = false):Void {
+		_wasInBounds = isCurrentTimeInBounds();
+		
 		if (lastTime == null) lastTime = currentTime;
 		if (lastTime == time) return;
 		
@@ -201,7 +205,7 @@ class TimelineItem {
 			}
 		}
 		// If not first update
-		else { 
+		else {
 			if (currentTime >= startTime && lastTime < startTime) {
 				onLeftHit(false);
 			}

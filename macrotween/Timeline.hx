@@ -18,10 +18,10 @@ class Timeline {
  * Timelines are themselves timeline items, and so can be nested within each other.
  */
 class Timeline extends TimelineItem {
-	public var length(get, never):Int;
-	
-	private var children:Array<TimelineItem>;
+	public var children(default, null):Array<TimelineItem>;
 
+	// TODO auto grow/shrink timelines duration based on children?
+	
 	public function new(?duration:Float = 1, ?startTime:Float = 0, ?ease:Float->Float) {
 		super(duration, startTime, ease);
 		this.children = new Array<TimelineItem>();
@@ -130,15 +130,6 @@ class Timeline extends TimelineItem {
 			}
 			relativeLast = time;
 		}
-	}
-	
-	private function get_length():Int {
-		return children.length;
-	}
-	
-	private static inline function clamp(value:Float, ?min:Float, ?max:Float):Float {
-		var lowerBound:Float = (min != null && value < min) ? min : value;
-		return (max != null && lowerBound > max) ? max : lowerBound;
 	}
 
 #end

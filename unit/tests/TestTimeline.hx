@@ -25,8 +25,9 @@ class TestTimeline implements ITest {
 		var tl = new Timeline();
 		
 		tl.tween(five => 10);
+		tl.stepTo(0, null, true);
 		tl.stepTo(0.5, null, true);
-		Assert.isTrue(five == 7.5);
+		Assert.isTrue(five == 7.5, "" + five);
 	}
 	
 	public function testOvershootBounds():Void {
@@ -35,7 +36,7 @@ class TestTimeline implements ITest {
 		tl.tween(five => 10);
 		tl.stepTo(0, null, true);
 		tl.stepTo(2, null, true);
-		Assert.isTrue(five == 10);
+		Assert.isTrue(five == 10, "" + five);
 	}
 	
 	public function testCallbackOrders():Void {
@@ -52,7 +53,7 @@ class TestTimeline implements ITest {
 		cbt2.rightHit = function(rev) {str += "2R" + (rev ? "r" : ""); };
 		
 		tl.add(cbt1).add(cbt2);
-		Assert.isTrue(tl.length == 2);
+		Assert.isTrue(tl.children.length == 2);
 		tl.stepTo(0, null, true);
 		tl.stepTo(1, null, true);
 		Assert.isTrue(a.b == 200);
@@ -77,7 +78,7 @@ class TestTimeline implements ITest {
 		cbt2.rightHit = function(rev) {str += "2R" + (rev ? "r" : ""); };
 		
 		tl.add(cbt1).add(cbt2);
-		Assert.isTrue(tl.length == 2);
+		Assert.isTrue(tl.children.length == 2);
 		tl.stepTo(0, null, true);
 		tl.stepTo(1, null, true);
 		Assert.isTrue(a.b == 200);
@@ -99,11 +100,6 @@ class TestTimeline implements ITest {
 		tl.tween(five => 10).stepTo(0.5, null, true);
 		
 		Assert.isTrue(five == 6.25);
-	}
-	
-	public function testNestedTimelines():Void {
-		// TODO
-		Assert.isTrue(true);
 	}
 	
 	public function testMultipleTimelines():Void {
