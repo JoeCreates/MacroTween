@@ -60,19 +60,9 @@ class Ease {
 	public static inline function atanInOut(t:Float):Float return atanInOutAdv.bind(_, 15)(t);
 	public static inline function atanOut(t:Float):Float return atanOutAdv.bind(_, 15)(t);
 
-	public static inline function atanInAdv(t:Float, a:Float = 15):Float {
-		var m:Float = Math.atan(a);
-		return Math.atan((t - 1) * a) / m + 1;
-	}
-
-	public static inline function atanOutAdv(t:Float, a:Float = 15):Float {
-		var m:Float = Math.atan(a);
-		return Math.atan(t * a)  / m;
-	}
-
-	public static inline function atanInOutAdv(t:Float, a:Float = 15):Float {
-		return combine.bind(atanIn, atanOut)(t);
-	}
+	public static inline function atanOutAdv(t:Float, a:Float = 15):Float return Math.atan(t * a)  / Math.atan(a);
+	public static inline function atanInAdv(t:Float, a:Float = 15):Float return invert.bind(atanOutAdv.bind(_, a))(t);
+	public static inline function atanInOutAdv(t:Float, a:Float = 15):Float return combine.bind(atanIn, atanOut)(t);
 	
 	// Back
 	public static inline function backIn(t:Float):Float return backInAdv.bind(_, 1.70158)(t);
@@ -80,24 +70,10 @@ class Ease {
 	public static inline function backInOut(t:Float):Float return backInOutAdv.bind(_, 1.70158)(t);
 	public static inline function backOutIn(t:Float):Float return backOutInAdv.bind(_, 1.70158)(t);
 	
-	public static inline function backInAdv(t:Float, s:Float = 1.70158):Float {
-		return t * t * ((s + 1) * t - s);
-	}
-
-	public static inline function backOutAdv(t:Float, s:Float = 1.70158):Float {
-		t -= 1;
-		return t * t * ((s + 1) * t + s) + 1;
-	}
-
-	public static inline function backInOutAdv(t:Float, s:Float = 1.70158):Float {
-		t *= 2;
-		s *= 1.525;
-		return (t < 1) ? 0.5 * (t * t * ((s + 1) * t - s)) : 0.5 * ((t -= 2) * t * ((s + 1) * t + s) + 2);
-	}
-
-	public static inline function backOutInAdv(t:Float, s:Float = 1.70158):Float {
-		return (t < 0.5) ? backOutAdv(2 * t, s) / 2 : backInAdv(2 * t - 1, s) / 2 + 0.5;
-	}
+	public static inline function backInAdv(t:Float, s:Float = 1.70158):Float return t * t * ((s + 1) * t - s);
+	public static inline function backOutAdv(t:Float, s:Float = 1.70158):Float return invert.bind(backInAdv.bind(_, s))(t);
+	public static inline function backInOutAdv(t:Float, s:Float = 1.70158):Float return combine.bind(backInAdv.bind(_, s), backOutAdv.bind(_, s))(t);
+	public static inline function backOutInAdv(t:Float, s:Float = 1.70158):Float return combine.bind(backOutAdv.bind(_, s), backInAdv.bind(_, s))(t);
 	
 	// Bounce
 	public static inline function bounceIn(t:Float):Float return bounceInAdv.bind(_, 1.70158)(t);
@@ -105,21 +81,10 @@ class Ease {
 	public static inline function bounceInOut(t:Float):Float return bounceInOutAdv.bind(_, 1.70158)(t);
 	public static inline function bounceOutIn(t:Float):Float return bounceOutInAdv.bind(_, 1.70158)(t);
 
-	public static inline function bounceInAdv(t:Float, a:Float = 1.70158):Float {
-		return 1 - bounceHelperOut(1 - t, 1, a);
-	}
-
-	public static inline function bounceOutAdv(t:Float, a:Float = 1.70158):Float {
-		return bounceHelperOut(t, 1, a);
-	}
-
-	public static inline function bounceInOutAdv(t:Float, a:Float = 1.70158):Float {
-		return combine.bind(bounceInAdv.bind(_, a), bounceOutAdv.bind(_, a))(t);
-	}
-
-	public static inline function bounceOutInAdv(t:Float, a:Float = 1.70158):Float {
-		return combine.bind(bounceOutAdv.bind(_, a), bounceInAdv.bind(_, a))(t);
-	}
+	public static inline function bounceInAdv(t:Float, a:Float = 1.70158):Float return invert.bind(bounceOutAdv.bind(_, a))(t);
+	public static inline function bounceOutAdv(t:Float, a:Float = 1.70158):Float return bounceHelperOut.bind(_, 1, a)(t);
+	public static inline function bounceInOutAdv(t:Float, a:Float = 1.70158):Float return combine.bind(bounceInAdv.bind(_, a), bounceOutAdv.bind(_, a))(t);
+	public static inline function bounceOutInAdv(t:Float, a:Float = 1.70158):Float return combine.bind(bounceOutAdv.bind(_, a), bounceInAdv.bind(_, a))(t);
 
 	private static inline function bounceHelperOut(t:Float, b:Float, c:Float):Float {
 		if (t == 1) {
@@ -139,21 +104,10 @@ class Ease {
 	}
 	
 	// Circular
-	public static inline function circIn(t:Float):Float {
-		return -(Math.sqrt(1 - t * t) - 1);
-	}
-
-	public static inline function circOut(t:Float):Float {
-		return invert.bind(circIn)(t);
-	}
-
-	public static inline function circInOut(t:Float):Float {
-		return combine.bind(circIn, circOut)(t);
-	}
-
-	public static inline function circOutIn(t:Float):Float {
-		return combine.bind(circIn, circOut)(t);
-	}
+	public static inline function circIn(t:Float):Float return -(Math.sqrt(1 - t * t) - 1);
+	public static inline function circOut(t:Float):Float return invert.bind(circIn)(t);
+	public static inline function circInOut(t:Float):Float return combine.bind(circIn, circOut)(t);
+	public static inline function circOutIn(t:Float):Float return combine.bind(circIn, circOut)(t);
 	
 	// Cubic Hermite
 	public static inline function hermite(t:Float, accelTime:Float, cruiseTime:Float, decelTime:Float):Float {
@@ -236,94 +190,37 @@ class Ease {
 	}
 	
 	// Expo
-	public static inline function expoIn(t:Float):Float {
-		return (t == 0) ? 0 : Math.pow(2, 10 * (t - 1));
-	}
-
-	public static inline function expoOut(t:Float):Float {
-		return invert.bind(expoIn)(t);
-	}
-
-	public static inline function expoInOut(t:Float):Float {
-		return combine.bind(expoIn, expoOut)(t);
-	}
-
-	public static inline function expoOutIn(t:Float):Float {
-		return combine.bind(expoOut, expoIn)(t);
-	}
+	public static inline function expoIn(t:Float):Float return (t == 0) ? 0 : Math.pow(2, 10 * (t - 1));
+	public static inline function expoOut(t:Float):Float return invert.bind(expoIn)(t);
+	public static inline function expoInOut(t:Float):Float return combine.bind(expoIn, expoOut)(t);
+	public static inline function expoOutIn(t:Float):Float return combine.bind(expoOut, expoIn)(t);
 	
 	// Linear
-	public static inline function linear(t:Float):Float {
-		return t;
-	}
+	public static inline function linear(t:Float):Float return t;
 	
 	// Quad
-	public static inline function quadIn(t:Float):Float {
-		return t * t;
-	}
-
-	public static inline function quadOut(t:Float):Float {
-		return invert.bind(quadIn)(t);
-	}
-
-	public static inline function quadInOut(t:Float):Float {
-		return combine.bind(quadIn, quadOut)(t);
-	}
-
-	public static inline function quadOutIn(t:Float):Float {
-		return combine.bind(quadOut, quadIn)(t);
-	}
+	public static inline function quadIn(t:Float):Float return t * t;
+	public static inline function quadOut(t:Float):Float return invert.bind(quadIn)(t);
+	public static inline function quadInOut(t:Float):Float return combine.bind(quadIn, quadOut)(t);
+	public static inline function quadOutIn(t:Float):Float return combine.bind(quadOut, quadIn)(t);
 	
 	// Cubic
-	public static inline function cubicIn(t:Float):Float {
-		return t * t * t;
-	}
-
-	public static inline function cubicOut(t:Float):Float {
-		return invert.bind(cubicIn)(t);
-	}
-
-	public static inline function cubicInOut(t:Float):Float {
-		return combine.bind(cubicIn, cubicOut)(t);
-	}
-
-	public static inline function cubicOutIn(t:Float):Float {
-		return combine.bind(cubicOut, cubicIn)(t);
-	}
+	public static inline function cubicIn(t:Float):Float return t * t * t;
+	public static inline function cubicOut(t:Float):Float return invert.bind(cubicIn)(t);
+	public static inline function cubicInOut(t:Float):Float return combine.bind(cubicIn, cubicOut)(t);
+	public static inline function cubicOutIn(t:Float):Float return combine.bind(cubicOut, cubicIn)(t);
 	
 	// Quart
-	public static inline function quartIn(t:Float):Float {
-		return t * t * t * t;
-	}
-
-	public static inline function quartOut(t:Float):Float {
-		return invert.bind(quartIn)(t);
-	}
-
-	public static inline function quartInOut(t:Float):Float {
-		return combine.bind(quartIn, quartOut)(t);
-	}
-
-	public static inline function quartOutIn(t:Float):Float {
-		return combine.bind(quartOut, quartIn)(t);
-	}
+	public static inline function quartIn(t:Float):Float return t * t * t * t;
+	public static inline function quartOut(t:Float):Float return invert.bind(quartIn)(t);
+	public static inline function quartInOut(t:Float):Float return combine.bind(quartIn, quartOut)(t);
+	public static inline function quartOutIn(t:Float):Float return combine.bind(quartOut, quartIn)(t);
 	
 	// Quint
-	public static inline function quintIn(t:Float):Float {
-		return t * t * t * t * t;
-	}
-
-	public static inline function quintOut(t:Float):Float {
-		return invert.bind(quintIn)(t);
-	}
-
-	public static inline function quintInOut(t:Float):Float {
-		return combine.bind(quintIn, quintOut)(t);
-	}
-
-	public static inline function quintOutIn(t:Float):Float {
-		return combine.bind(quintOut, quintIn)(t);
-	}
+	public static inline function quintIn(t:Float):Float return t * t * t * t * t;
+	public static inline function quintOut(t:Float):Float return invert.bind(quintIn)(t);
+	public static inline function quintInOut(t:Float):Float return combine.bind(quintIn, quintOut)(t);
+	public static inline function quintOutIn(t:Float):Float return combine.bind(quintOut, quintIn)(t);
 	
 	// Sine
 	public static inline function sineIn(t:Float):Float {
