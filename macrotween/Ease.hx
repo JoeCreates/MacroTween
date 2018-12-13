@@ -62,7 +62,7 @@ class Ease {
 
 	public static inline function atanOutAdv(t:Float, a:Float = 15):Float return Math.atan(t * a)  / Math.atan(a);
 	public static inline function atanInAdv(t:Float, a:Float = 15):Float return invert.bind(atanOutAdv.bind(_, a))(t);
-	public static inline function atanInOutAdv(t:Float, a:Float = 15):Float return combine.bind(atanIn, atanOut)(t);
+	public static inline function atanInOutAdv(t:Float, a:Float = 15):Float return combine.bind(atanInAdv.bind(_, a), atanOutAdv.bind(_, a))(t);
 	
 	// Back
 	public static inline function backIn(t:Float):Float return backInAdv.bind(_, 1.70158)(t);
