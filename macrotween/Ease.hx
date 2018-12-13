@@ -71,7 +71,7 @@ class Ease {
 	}
 
 	public static inline function atanInOutAdv(t:Float, a:Float = 15):Float {
-		return combine(atanIn, atanOut)(t);
+		return combine.bind(atanIn, atanOut)(t);
 	}
 	
 	// Back
@@ -114,11 +114,11 @@ class Ease {
 	}
 
 	public static inline function bounceInOutAdv(t:Float, a:Float = 1.70158):Float {
-		return combine(bounceInAdv.bind(_, a), bounceOutAdv.bind(_, a))(t);
+		return combine.bind(bounceInAdv.bind(_, a), bounceOutAdv.bind(_, a))(t);
 	}
 
 	public static inline function bounceOutInAdv(t:Float, a:Float = 1.70158):Float {
-		return combine(bounceOutAdv.bind(_, a), bounceInAdv.bind(_, a))(t);
+		return combine.bind(bounceOutAdv.bind(_, a), bounceInAdv.bind(_, a))(t);
 	}
 
 	private static inline function bounceHelperOut(t:Float, b:Float, c:Float):Float {
@@ -144,15 +144,15 @@ class Ease {
 	}
 
 	public static inline function circOut(t:Float):Float {
-		return invert(circIn)(t);
+		return invert.bind(circIn)(t);
 	}
 
 	public static inline function circInOut(t:Float):Float {
-		return combine(circIn, circOut)(t);
+		return combine.bind(circIn, circOut)(t);
 	}
 
 	public static inline function circOutIn(t:Float):Float {
-		return combine(circIn, circOut)(t);
+		return combine.bind(circIn, circOut)(t);
 	}
 	
 	// Cubic Hermite
@@ -192,11 +192,11 @@ class Ease {
 	}
 
 	public static function elasticInOutAdv(t:Float, amp:Float, period:Float):Float {
-		return combine(elasticInAdv.bind(_, amp, period), elasticOutAdv.bind(_, amp, period))(t);
+		return combine.bind(elasticInAdv.bind(_, amp, period), elasticOutAdv.bind(_, amp, period))(t);
 	}
 
 	public static inline function elasticOutInAdv(t:Float, amp:Float, period:Float):Float {
-		return combine(elasticOutAdv.bind(_, amp, period), elasticInAdv.bind(_, amp, period))(t);
+		return combine.bind(elasticOutAdv.bind(_, amp, period), elasticInAdv.bind(_, amp, period))(t);
 	}
 
 	private static inline function elasticHelperIn(t:Float, b:Float, c:Float, d:Float, a:Float, p:Float):Float {
@@ -241,15 +241,15 @@ class Ease {
 	}
 
 	public static inline function expoOut(t:Float):Float {
-		return invert(expoIn)(t);
+		return invert.bind(expoIn)(t);
 	}
 
 	public static inline function expoInOut(t:Float):Float {
-		return combine(expoIn, expoOut)(t);
+		return combine.bind(expoIn, expoOut)(t);
 	}
 
 	public static inline function expoOutIn(t:Float):Float {
-		return combine(expoOut, expoIn)(t);
+		return combine.bind(expoOut, expoIn)(t);
 	}
 	
 	// Linear
@@ -263,15 +263,15 @@ class Ease {
 	}
 
 	public static inline function quadOut(t:Float):Float {
-		return invert(quadIn)(t);
+		return invert.bind(quadIn)(t);
 	}
 
 	public static inline function quadInOut(t:Float):Float {
-		return combine(quadIn, quadOut)(t);
+		return combine.bind(quadIn, quadOut)(t);
 	}
 
 	public static inline function quadOutIn(t:Float):Float {
-		return combine(quadOut, quadIn)(t);
+		return combine.bind(quadOut, quadIn)(t);
 	}
 	
 	// Cubic
@@ -280,15 +280,15 @@ class Ease {
 	}
 
 	public static inline function cubicOut(t:Float):Float {
-		return invert(cubicIn)(t);
+		return invert.bind(cubicIn)(t);
 	}
 
 	public static inline function cubicInOut(t:Float):Float {
-		return combine(cubicIn, cubicOut)(t);
+		return combine.bind(cubicIn, cubicOut)(t);
 	}
 
 	public static inline function cubicOutIn(t:Float):Float {
-		return combine(cubicOut, cubicIn)(t);
+		return combine.bind(cubicOut, cubicIn)(t);
 	}
 	
 	// Quart
@@ -297,15 +297,15 @@ class Ease {
 	}
 
 	public static inline function quartOut(t:Float):Float {
-		return invert(quartIn)(t);
+		return invert.bind(quartIn)(t);
 	}
 
 	public static inline function quartInOut(t:Float):Float {
-		return combine(quartIn, quartOut)(t);
+		return combine.bind(quartIn, quartOut)(t);
 	}
 
 	public static inline function quartOutIn(t:Float):Float {
-		return combine(quartOut, quartIn)(t);
+		return combine.bind(quartOut, quartIn)(t);
 	}
 	
 	// Quint
@@ -314,15 +314,15 @@ class Ease {
 	}
 
 	public static inline function quintOut(t:Float):Float {
-		return invert(quintIn)(t);
+		return invert.bind(quintIn)(t);
 	}
 
 	public static inline function quintInOut(t:Float):Float {
-		return combine(quintIn, quintOut)(t);
+		return combine.bind(quintIn, quintOut)(t);
 	}
 
 	public static inline function quintOutIn(t:Float):Float {
-		return combine(quintOut, quintIn)(t);
+		return combine.bind(quintOut, quintIn)(t);
 	}
 	
 	// Sine
@@ -364,14 +364,12 @@ class Ease {
 		return lerp(p1, p2, segmentT);
 	}
 	
-	public static inline function combine(ease1:Float->Float, ease2:Float->Float):Float->Float {
-		return function(t:Float):Float {return t < 0.5 ? 0.5 * ease1(t * 2) : (0.5 + 0.5 * ease2((t - 0.5) * 2));};
+	public static inline function combine(ease1:Float->Float, ease2:Float->Float, t:Float):Float {
+		return t < 0.5 ? 0.5 * ease1(t * 2) : (0.5 + 0.5 * ease2((t - 0.5) * 2));
 	}
 	
-	public static inline function invert(ease:Float->Float):Float->Float {
-		return function(t:Float):Float {
-			var it = 1 - t; // Cache for efficiency
-			return 1 - ease(it);
-		}
+	public static inline function invert(ease:Float->Float, t:Float):Float {
+		var it = 1 - t; // Cache for efficiency
+		return 1 - ease(it);
 	}
 }
