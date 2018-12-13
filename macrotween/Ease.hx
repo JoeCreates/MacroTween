@@ -114,11 +114,11 @@ class Ease {
 	}
 
 	public static inline function bounceInOutAdv(t:Float, a:Float = 1.70158):Float {
-		return (t < 0.5) ? bounceInAdv(2 * t, a) / 2 : (t == 1) ? 1 : bounceOutAdv(2 * t - 1, a) / 2 + 0.5;
+		return combine(bounceInAdv.bind(_, a), bounceOutAdv.bind(_, a))(t);
 	}
 
 	public static inline function bounceOutInAdv(t:Float, a:Float = 1.70158):Float {
-		return (t < 0.5) ? bounceHelperOut(t * 2, 0.5, a) : 1 - bounceHelperOut(2 - 2 * t, 0.5, a);
+		return combine(bounceOutAdv.bind(_, a), bounceInAdv.bind(_, a))(t);
 	}
 
 	private static inline function bounceHelperOut(t:Float, b:Float, c:Float):Float {
@@ -144,8 +144,7 @@ class Ease {
 	}
 
 	public static inline function circOut(t:Float):Float {
-		t -= 1;
-		return Math.sqrt(1 - t * t);
+		return invert(circIn)(t);
 	}
 
 	public static inline function circInOut(t:Float):Float {
@@ -153,7 +152,7 @@ class Ease {
 	}
 
 	public static inline function circOutIn(t:Float):Float {
-		return (t < 0.5) ? circOut(2 * t) / 2 : circIn(2 * t - 1) / 2 + 0.5;
+		return combine(circIn, circOut)(t);
 	}
 	
 	// Cubic Hermite
@@ -242,7 +241,7 @@ class Ease {
 	}
 
 	public static inline function expoOut(t:Float):Float {
-		return (t == 1) ? 1 : - Math.pow(2, -10 * t) + 1;
+		return invert(expoIn)(t);
 	}
 
 	public static inline function expoInOut(t:Float):Float {
@@ -264,7 +263,7 @@ class Ease {
 	}
 
 	public static inline function quadOut(t:Float):Float {
-		return -t * (t - 2);
+		return invert(quadIn)(t);
 	}
 
 	public static inline function quadInOut(t:Float):Float {
@@ -281,8 +280,7 @@ class Ease {
 	}
 
 	public static inline function cubicOut(t:Float):Float {
-		t -= 1;
-		return t * t * t + 1;
+		return invert(cubicIn)(t);
 	}
 
 	public static inline function cubicInOut(t:Float):Float {
@@ -299,8 +297,7 @@ class Ease {
 	}
 
 	public static inline function quartOut(t:Float):Float {
-		t -= 1;
-		return -(t * t * t * t - 1);
+		return invert(quartIn)(t);
 	}
 
 	public static inline function quartInOut(t:Float):Float {
@@ -317,8 +314,7 @@ class Ease {
 	}
 
 	public static inline function quintOut(t:Float):Float {
-		t -= 1;
-		return t * t * t * t * t + 1;
+		return invert(quintIn)(t);
 	}
 
 	public static inline function quintInOut(t:Float):Float {
@@ -370,5 +366,12 @@ class Ease {
 	
 	public static inline function combine(ease1:Float->Float, ease2:Float->Float):Float->Float {
 		return function(t:Float):Float {return t < 0.5 ? 0.5 * ease1(t * 2) : (0.5 + 0.5 * ease2((t - 0.5) * 2));};
+	}
+	
+	public static inline function invert(ease:Float->Float):Float->Float {
+		return function(t:Float):Float {
+			var it = 1 - t; // Cache for efficiency
+			return 1 - ease(it);
+		}
 	}
 }
