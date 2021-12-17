@@ -5,9 +5,9 @@
 
 MacroTween is a Haxe library for concise tweening and timelines.
 
-**WARNING: Currently in development and unstable!**
+**WARNING: Currently in development and incomplete, we haven't used it for any big projects yet!**
 
-Run the demo in the [browser](https://joecreates.github.io/MacroTweenDemo/index.html).
+Run the demo in your [browser](https://joecreates.github.io/MacroTweenDemo/index.html).
 
 ## Usage
 
@@ -48,6 +48,8 @@ timeline.tween(...).tween(...);
 ```
 
 See more usage examples in the [unit tests](https://github.com/JoeCreates/MacroTween/blob/master/unit/tests/TestReadmeExamples.hx) and [demo code](https://github.com/JoeCreates/MacroTweenDemo)
+
+[![Graphs Tween Demo](https://github.com/JoeCreates/MacroTweenDemo/blob/master/screenshots/graphs_demo_animation.gif?raw=true "MacroTween Graphs Demo Screenshot")](https://joecreates.github.io/MacroTweenDemo/index.html)
 
 ## Notes
  * Got an idea or request? Open an issue on [GitHub](https://github.com/JoeCreates/MacroTween) or contact [Joe](https://twitter.com/JoeCreates) and [Sam](https://twitter.com/Sam_Twidale).
