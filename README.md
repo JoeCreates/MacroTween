@@ -1,9 +1,7 @@
 # MacroTween
 
-[![Haxelib Version](https://img.shields.io/github/tag/JoeCreates/MacroTween.svg?style=flat-square&label=haxelib)](http://lib.haxe.org/p/MacroTween)
-[![Travis Build Status](https://img.shields.io/travis/JoeCreates/MacroTween.svg?style=flat-square)](https://travis-ci.org/JoeCreates/MacroTween)
-[![Code Climate](https://img.shields.io/codeclimate/issues/github/JoeCreates/MacroTween.svg?style=flat-square)](https://codeclimate.com/github/JoeCreates/MacroTween/issues)
 [![License](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg)](https://github.com/JoeCreates/MacroTween/blob/master/LICENSE)
+[![Build Status Badge](https://ci.appveyor.com/api/projects/status/github/Tw1ddle/MacroTween)](https://ci.appveyor.com/project/Tw1ddle/MacroTween)
 
 MacroTween is a Haxe library for concise tweening and timelines.
 
